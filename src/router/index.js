@@ -1,7 +1,7 @@
 import Home from "~/pages/Home";
 import Profile from "~/pages/Profile";
-import User from "~/pages/User";
-import routes from "~/config/routes";
+import WatchMovie from "~/pages/WatchMovie";
+import routes from "~/config/routes/routes";
 
 const publicRoutes = [
   {
@@ -13,8 +13,8 @@ const publicRoutes = [
     Component: Profile,
   },
   {
-    path: routes.User,
-    Component: User,
+    path: routes.WatchMovie,
+    Component: WatchMovie,
   },
 ];
 export default publicRoutes;

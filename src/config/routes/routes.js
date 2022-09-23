@@ -1,6 +1,6 @@
 const routes = {
   Home: "/",
   Profile: "/profile",
-  User: "/user",
+  WatchMovie: "/movies/:idMovie",
 };
 export default routes;

@@ -1,0 +1,12 @@
+import axios from "axios";
+const requestAPI = axios.create({
+  baseURL: process.env.REACT_APP_BASE_URL,
+});
+export const get = async (path) => {
+  const res = await requestAPI.get(path, {
+    params: {
+      api_key: "1f7b4ae0102371b9dcab2569bcd6bb5f",
+    },
+  });
+  return res.data;
+};

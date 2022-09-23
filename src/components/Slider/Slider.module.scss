@@ -1,0 +1,23 @@
+.arrow::before {
+  content: none;
+}
+.arrow {
+  width: unset;
+  height: unset;
+  z-index: 2;
+}
+.arrow:hover {
+  color: rgb(134 239 172);
+}
+.arrow:first-child {
+  margin-left: -10px;
+}
+.arrow:last-child {
+  margin-right: -10px;
+}
+.custom_arrow:first-child {
+  left: 60px;
+}
+.custom_arrow:last-child {
+  right: 60px;
+}
