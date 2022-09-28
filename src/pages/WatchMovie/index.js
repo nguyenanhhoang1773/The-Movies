@@ -2,22 +2,23 @@ import movieService from "~/apiServices/movieService";
 import { useEffect, useState } from "react";
 import RecommentMovie from "~/components/RecommentMovie";
 import recommentService from "~/apiServices/recommentService";
+import { useParams } from "react-router-dom";
 function WatchMovie() {
   const [movie, setMovie] = useState({});
+  let { idMovie } = useParams();
   const [recomment, setRecomment] = useState([]);
-  const id = window.location.href.match(/\d/g).join("").replace("3000", "");
   useEffect(() => {
     const fetchMovie = async () => {
-      const res = await movieService(id);
+      const res = await movieService(idMovie);
       setMovie(res);
     };
     const fetchRecomment = async () => {
-      const res = await recommentService(id);
+      const res = await recommentService(idMovie);
       setRecomment(res);
     };
     fetchMovie();
     fetchRecomment();
-  }, [id]);
+  }, [idMovie]);
   return (
     <div className="flex px-[40px] py-[60px]">
       <div>
@@ -25,7 +26,7 @@ function WatchMovie() {
           title="Movie"
           allowFullScreen
           className="w-[800px] h-[400px]"
-          src={`https://www.2embed.to/embed/tmdb/movie?id=${id}`}
+          src={`https://www.2embed.to/embed/tmdb/movie?id=${idMovie}`}
         ></iframe>
         <h3 className=" text-[color:var(--primary)] font-[600] mt-[16px] text-[24px]">
           {movie.title}

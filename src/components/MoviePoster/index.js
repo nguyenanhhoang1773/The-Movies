@@ -1,17 +1,20 @@
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import movieSlice from "~/redux/movieSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import style from "./MoviePoster.module.scss";
-function MoviePoster({ id, title, src, star }) {
-  const dispatch = useDispatch();
+import { useEffect, useRef } from "react";
+function MoviePoster({ id, title, src, star, width }) {
+  const imgEle = useRef();
+  useEffect(() => {
+    console.log(imgEle.current.width);
+    imgEle.current.style.height = imgEle.current.width * 1.5 + "px";
+  }, []);
   return (
-    <div className="inline-block hover:scale-105 transition-all p-[10px]">
+    <div
+      className={`${width} inline-block hover:scale-105 transition-all p-[10px]`}
+    >
       <Link
         className="relative"
         onClick={() => {
-          dispatch(movieSlice.actions.setIdMovie(id));
           document.querySelector("body").scrollIntoView({
             block: "start",
           });
@@ -19,8 +22,11 @@ function MoviePoster({ id, title, src, star }) {
         to={`/movies/${id}`}
       >
         <img
+          ref={imgEle}
           alt="ac"
-          className="w-[220px] hover:cursor-pointer drop-shadow-md  rounded-md"
+          className={`${
+            width ? "w-full" : "w-[220px]"
+          }  hover:cursor-pointer drop-shadow-md  rounded-md`}
           src={src}
         />
         <div className="absolute flex justify-center items-center top-[10px] left-[10px]  bg-[#6affb996] rounded-lg w-[60px] h-[30px] text-white">

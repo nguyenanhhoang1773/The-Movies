@@ -17,7 +17,7 @@ function Button({ to, className, children, onClick }, ref) {
       className={
         Tag === NavLink
           ? handleActive
-          : `text-white hover:text-[color:var(--primary)] cursor-pointer transition-all font-medium text-lg p-3  ${className}`
+          : `text-white w-[140px] text-center hover:text-[color:var(--primary)] cursor-pointer transition-all font-medium text-lg p-3  ${className}`
       }
     >
       {children}
