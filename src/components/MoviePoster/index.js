@@ -5,7 +5,6 @@ import { useEffect, useRef } from "react";
 function MoviePoster({ id, title, src, star, width }) {
   const imgEle = useRef();
   useEffect(() => {
-    console.log(imgEle.current.width);
     imgEle.current.style.height = imgEle.current.width * 1.5 + "px";
   }, []);
   return (

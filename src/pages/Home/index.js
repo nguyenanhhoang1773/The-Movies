@@ -63,7 +63,12 @@ function Home() {
         upComingMovies.length > 0 &&
         topRatedMovies.length > 0 && (
           <div>
-            <SliderPoster customPrev customNext props={{ slidesToShow: 1 }}>
+            <SliderPoster
+              customPrev
+              scroll
+              customNext
+              props={{ slidesToShow: 1 }}
+            >
               {nowPlayingMovies.length > 0 &&
                 nowPlayingMovies.map(
                   ({ id, title, backdrop_path, genres }, index) => (

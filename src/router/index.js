@@ -3,6 +3,7 @@ import Profile from "~/pages/Profile";
 import WatchMovie from "~/pages/WatchMovie";
 import routes from "~/config/routes/routes";
 import Search from "~/pages/Search";
+import Genres from "~/pages/Genres";
 import MiniContainer from "~/Layout/MiniContainer";
 
 const publicRoutes = [
@@ -17,10 +18,16 @@ const publicRoutes = [
   {
     path: routes.WatchMovie,
     Component: WatchMovie,
+    Layout: MiniContainer,
   },
   {
     path: routes.Search,
     Component: Search,
+    Layout: MiniContainer,
+  },
+  {
+    path: routes.Genres,
+    Component: Genres,
     Layout: MiniContainer,
   },
 ];

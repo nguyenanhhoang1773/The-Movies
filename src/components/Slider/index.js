@@ -36,10 +36,12 @@ function NextArrow(props) {
     </div>
   );
 }
-function SliderPoster({ children, props, customPrev, customNext }) {
+function SliderPoster({ children, props, customPrev, customNext, scroll }) {
   const sliderSetting = {
     infinite: true,
     speed: 500,
+    autoplay: scroll ? true : false,
+    autoplaySpeed: 3000,
     slidesToShow: 5,
     slidesToScroll: 1,
     ...props,

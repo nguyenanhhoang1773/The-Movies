@@ -1,7 +1,8 @@
 const routes = {
-  Home: "/",
+  Home: "/The-Movies",
   Profile: "/profile",
   WatchMovie: "/movies/:idMovie",
-  Search: "/movie/search/:textSearch",
+  Search: "/movies/search/:textSearch",
+  Genres: "/movies/genre/:nameGenre",
 };
 export default routes;
