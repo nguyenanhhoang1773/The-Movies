@@ -1,6 +1,6 @@
 import axios from "axios";
 const requestAPI = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
+  baseURL: "https://api.themoviedb.org/3/",
 });
 export const get = async (path, obj) => {
   const res = await requestAPI.get(path, {

@@ -1,8 +1,9 @@
 import movieService from "~/apiServices/movieService";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RecommentMovie from "~/components/RecommentMovie";
 import recommentService from "~/apiServices/recommentService";
 import { useParams } from "react-router-dom";
+import Loading from "~/components/Loading";
 function WatchMovie() {
   const [movie, setMovie] = useState({});
   let { idMovie } = useParams();
@@ -22,12 +23,17 @@ function WatchMovie() {
   return (
     <div className="flex justify-between px-[40px] py-[60px]">
       <div className=" mt-[50px]">
-        <iframe
-          title="Movie"
-          allowFullScreen
-          className="w-[1000px] h-[500px]"
-          src={`https://www.2embed.to/embed/tmdb/movie?id=${idMovie}`}
-        ></iframe>
+        <div className="relative">
+          <iframe
+            title="Movie"
+            allowFullScreen
+            className="relative w-[1000px] h-[500px] z-10"
+            src={`https://www.2embed.to/embed/tmdb/movie?id=${idMovie}`}
+          ></iframe>
+          <div className="absolute flex justify-center items-center top-0 bottom-0 left-0 right-0 z-0 bg-zinc-900">
+            <Loading className="w-[40px] h-[40px]" />
+          </div>
+        </div>
         <h3 className=" text-[color:var(--primary)] font-[600] mt-[16px] text-[24px]">
           {movie.title}
         </h3>

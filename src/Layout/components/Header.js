@@ -17,14 +17,27 @@ import genreService from "~/apiServices/genresService";
 import popularService from "~/apiServices/popularService";
 import { useDispatch, useSelector } from "react-redux";
 import popularSlice from "~/redux/Slice/popularSlice";
-import { popularSelector, genreSelector } from "~/redux/Selector";
+import {
+  signInSelector,
+  genreSelector,
+  logInSelector,
+  userInforSelector,
+} from "~/redux/Selector";
 import genreSlice from "~/redux/Slice/genreSlice";
+import logInSlice from "~/redux/Slice/logInSlice";
+import fireBaseSlice from "~/redux/Slice/fireBaseSlice";
+import ModalLogIn from "~/components/Modal";
+import { db } from "~/firebase/config";
+import firebase from "firebase/compat/app";
 function Header() {
-  const popularMovies = useSelector(popularSelector);
+  const logIn = useSelector(logInSelector);
+  const isSingIn = useSelector(signInSelector);
+  const userInfor = useSelector(userInforSelector);
   const genresSelector = useSelector(genreSelector);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const inputEle = useRef();
+  const [isShowHead, setShowHeader] = useState(false);
   const [listResultSearch, setListResultSearch] = useState([]);
   const [isListSearch, setIsListSearch] = useState(false);
   const handleFocusSearchInput = (e) => {
@@ -72,106 +85,141 @@ function Header() {
     genres();
     popular();
   }, []);
+  useEffect(() => {
+    db.collection("rooms").add({
+      displayName: "abc",
+      mesagge: [{ id: 1, name: "hoang" }],
+    });
+    db.collection("rooms").onSnapshot((snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+    });
+    const unregisterAuthObserver = firebase
+      .auth()
+      .onAuthStateChanged((user) => {
+        if (user) {
+          dispatch(fireBaseSlice.actions.setUserInfor(user._delegate));
+          dispatch(fireBaseSlice.actions.setSignIn(!!user));
+        }
+      });
+    return () => unregisterAuthObserver();
+  }, []);
   return (
-    <div className="fixed flex z-10 justify-center items-center h-14 top-0 w-full bg-neutral-900">
-      <div className="flex items-center h-full w-11/12 justify-between">
-        <div className="flex ">
-          <Link to={routes.Home} className="flex items-center justify-center">
-            <IconMain />
-          </Link>
-          <Button to={routes.Home}>Home</Button>
-          <Button
-            onClick={() =>
-              handleScrollIntoView(document.querySelector("#TopRated"))
-            }
-          >
-            Top Rated
-          </Button>
-          <Button
-            onClick={() =>
-              handleScrollIntoView(document.querySelector("#UpComing"))
-            }
-          >
-            Up Coming
-          </Button>
+    <div className="bg-neutral-900 fixed top-0 w-full z-20 h-14">
+      <div className="fixed flex z-10 justify-center items-center h-14 top-0 w-full ">
+        {logIn && !isSingIn && <ModalLogIn />}
+        <div className="flex items-center h-full w-11/12 justify-between">
+          <div className="flex ">
+            <Link to={routes.Home} className="flex items-center justify-center">
+              <IconMain />
+            </Link>
+            <Button to={routes.Home}>Home</Button>
+            <Button
+              onClick={() =>
+                handleScrollIntoView(document.querySelector("#TopRated"))
+              }
+            >
+              Top Rated
+            </Button>
+            <Button
+              onClick={() =>
+                handleScrollIntoView(document.querySelector("#UpComing"))
+              }
+            >
+              Up Coming
+            </Button>
 
-          <Tippy
-            interactive
-            render={(attrs) => (
-              <div
-                className="bg-green-300 relative rounded-md w-[600px] text-white"
-                tabIndex="-1"
-                {...attrs}
-              >
-                <div className="absolute  top-[-24px] left-[56%] z-10 border-green-300 border-[12px] border-t-transparent  border-r-transparent border-l-transparent "></div>
-                {genresSelector.genres.map(({ id, name }) => {
-                  return <ButtonType key={id} title={name} />;
-                })}
+            <Tippy
+              interactive
+              render={(attrs) => (
+                <div
+                  className="bg-green-300 relative rounded-md w-[600px] text-white"
+                  tabIndex="-1"
+                  {...attrs}
+                >
+                  <div className="absolute  top-[-24px] left-[56%] z-10 border-green-300 border-[12px] border-t-transparent  border-r-transparent border-l-transparent "></div>
+                  {genresSelector.genres.map(({ id, name }) => {
+                    return <ButtonType key={id} title={name} />;
+                  })}
+                </div>
+              )}
+            >
+              <Button>
+                Category
+                <span>
+                  <FontAwesomeIcon
+                    className="text-current ml-2"
+                    icon={faCaretDown}
+                  />
+                </span>
+              </Button>
+            </Tippy>
+          </div>
+          <div className="flex bg-zinc-700 relative rounded-full items-center  ">
+            <input
+              ref={inputEle}
+              onBlur={handleBlurSearchInput}
+              onKeyUp={handleSearchMovie}
+              placeholder="Tìm kiếm"
+              onFocus={handleFocusSearchInput}
+              onKeyDown={handleSubmitSearch}
+              className="outline-0 rounded-full h-9 w-[280px] bg-inherit text-sm p-2 py-3 text-zinc-200"
+            />
+            <span className="px-4 border-l-[1px] border-[color:var(--primary)] text-[color:var(--primary)]">
+              <FontAwesomeIcon
+                onClick={() =>
+                  navigate(`/movies/search/${inputEle.current.value}`)
+                }
+                className="cursor-pointer hover:text-green-300"
+                icon={faMagnifyingGlass}
+              />
+            </span>
+            {isListSearch && listResultSearch.length > 0 && (
+              <div className="bg-green-300  w-[420px] p-[4px] absolute top-[60px] rounded-md w-[var(--type-row-width)] text-white">
+                <div className="overflow-auto scroll-bar max-h-[400px] ">
+                  {listResultSearch.map(
+                    (
+                      { id, poster_path, original_title, vote_average },
+                      index
+                    ) => {
+                      const abc =
+                        poster_path || "/mVQTvegiq87kkf1lZGwmD4KFevB.jpg";
+                      return (
+                        <SearchItem
+                          id={id}
+                          key={index}
+                          src={`https://image.tmdb.org/t/p/w500/${abc}`}
+                          title={original_title}
+                          star={vote_average}
+                        />
+                      );
+                    }
+                  )}
+                </div>
               </div>
             )}
-          >
-            <Button>
-              Category
-              <span>
-                <FontAwesomeIcon
-                  className="text-current ml-2"
-                  icon={faCaretDown}
-                />
-              </span>
+          </div>
+          <div className="flex justify-center items-center">
+            <Button className="mr-2">
+              <FontAwesomeIcon className="text-2xl mt-1" icon={faBell} />
             </Button>
-          </Tippy>
-        </div>
-        <div className="flex bg-zinc-700 relative rounded-full items-center  ">
-          <input
-            ref={inputEle}
-            onBlur={handleBlurSearchInput}
-            onKeyUp={handleSearchMovie}
-            placeholder="Tìm kiếm"
-            onFocus={handleFocusSearchInput}
-            onKeyDown={handleSubmitSearch}
-            className="outline-0 rounded-full h-9 w-[280px] bg-inherit text-sm p-2 py-3 text-zinc-200"
-          />
-          <span className="px-4 border-l-[1px] border-[color:var(--primary)] text-[color:var(--primary)]">
-            <FontAwesomeIcon
-              onClick={() =>
-                navigate(`/movies/search/${inputEle.current.value}`)
-              }
-              className="cursor-pointer hover:text-green-300"
-              icon={faMagnifyingGlass}
-            />
-          </span>
-          {isListSearch && listResultSearch.length > 0 && (
-            <div className="bg-green-300  w-[420px] p-[4px] absolute top-[60px] rounded-md w-[var(--type-row-width)] text-white">
-              <div className="overflow-auto scroll-bar max-h-[400px] ">
-                {listResultSearch.map(
-                  (
-                    { id, poster_path, original_title, vote_average },
-                    index
-                  ) => {
-                    const abc =
-                      poster_path || "/mVQTvegiq87kkf1lZGwmD4KFevB.jpg";
-                    return (
-                      <SearchItem
-                        id={id}
-                        key={index}
-                        src={`https://image.tmdb.org/t/p/w500/${abc}`}
-                        title={original_title}
-                        star={vote_average}
-                      />
-                    );
-                  }
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="flex justify-center items-center">
-          <Button className="mr-2">
-            <FontAwesomeIcon className="text-2xl mt-1" icon={faBell} />
-          </Button>
-          <button className="h-8 flex items-center w-[120px] justify-center rounded-md px-3 transition-all text-white  font-semibold hover:bg-green-300   py-2 bg-green-500">
-            Đăng nhập
-          </button>
+            {!isSingIn && (
+              <button
+                onClick={() => dispatch(logInSlice.actions.setLogIn())}
+                className="h-8 flex items-center w-[120px] justify-center rounded-md px-3 transition-all text-white  font-semibold hover:bg-green-300   py-2 bg-green-500"
+              >
+                Đăng nhập
+              </button>
+            )}
+            {userInfor.photoURL && (
+              <img
+                src={userInfor.photoURL}
+                className="w-[30px] h-[30px] rounded-full cursor-pointer"
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>
