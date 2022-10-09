@@ -2,13 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 function RecommentMovie({ id, title, src, star }) {
   const navigate = useNavigate();
   return (
-    <div className="flex mt-[16px]">
+    <div className="flex mt-[16px] first:mt-0">
       <img
         src={src}
         onClick={() => {
           navigate(`/movies/${id}`);
         }}
-        className="w-[180px] rounded-md hover:cursor-pointer"
+        className="w-[180px] rounded-md hover:cursor-pointer "
       />
       <div className=" flex flex-col justify-between ml-[16px]">
         <h3 className="text-white text-[22px] mt-[14px] ml-[20px] font-[500]">
