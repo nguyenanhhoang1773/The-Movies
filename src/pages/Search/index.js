@@ -7,6 +7,7 @@ function Search() {
   const { textSearch } = useParams();
   const [isMovie, setIsMovie] = useState([]);
   useEffect(() => {
+    setIsMovie([]);
     const getMovies = async () => {
       const result = await searchService(textSearch);
       setIsMovie(result);
@@ -15,25 +16,29 @@ function Search() {
   }, [textSearch]);
   return (
     <div>
-      <div className="pt-[40px]">
-        <div className="text-[24px] font-[600] ml-[10px] mb-[10px] text-white">
-          Search: {textSearch}
+      {isMovie.length > 0 && (
+        <div>
+          <div className="pt-[40px] mb:pt-[20px]">
+            <div className="text-[24px] font-[600] ml-[10px] mb-[10px] text-white">
+              Search: {textSearch}
+            </div>
+            {isMovie.map(
+              ({ id, poster_path, original_title, vote_average }, index) => {
+                return (
+                  <MoviePoster
+                    width="w-[16.6%]"
+                    key={index}
+                    id={id}
+                    src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                    title={original_title}
+                    star={vote_average}
+                  />
+                );
+              }
+            )}
+          </div>
         </div>
-        {isMovie.map(
-          ({ id, poster_path, original_title, vote_average }, index) => {
-            return (
-              <MoviePoster
-                width="w-[16.6%]"
-                key={index}
-                id={id}
-                src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-                title={original_title}
-                star={vote_average}
-              />
-            );
-          }
-        )}
-      </div>
+      )}
     </div>
   );
 }

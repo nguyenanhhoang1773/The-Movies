@@ -37,15 +37,38 @@ function WatchMovie() {
             <Loading className="w-[40px] h-[40px]" />
           </div>
         </div>
-        <h3 className=" text-[color:var(--primary)] font-[600] mt-[16px] text-[24px]">
-          {movie.title}
-        </h3>
-        <p className="text-white w-[1000px] mt-6px">
-          <span className="text-[20px] font-[500] text-[color:var(--primary)] mr-[4px]">
-            Overview :
-          </span>
-          {movie.overview}
-        </p>
+        {movie.title && (
+          <div>
+            <h3 className=" text-[color:var(--primary)] font-[600] mt-[16px] text-[24px]">
+              {movie.title}
+            </h3>
+            <p className="text-white w-[1000px] mt-6px">
+              <span className="text-[20px] font-[500] text-[color:var(--primary)] mr-[4px]">
+                Overview :
+              </span>
+              {movie.overview}
+            </p>{" "}
+          </div>
+        )}
+        {!movie.title && (
+          <div>
+            <h3 className=" text-slate-500 inline-block  bg-slate-500 font-[600] mt-[16px] text-[16px]">
+              nguyenhoang
+            </h3>
+            <p className="w-[1000px]    mt-[12px]">
+              <span className="text-[10px] font-[500] text-slate-500  bg-slate-500 mr-[4px]">
+                hoang la nguoi vua dep trai vua tot bung anh ay qua la dinh
+                minhf uoc gi anh ay la nguoi yeu cua minh hoang la nguoi vua dep
+                trai vua tot bung anh ay qua la dinh minhf uoc gi anh ay la
+                nguoi yeu cua minh uoc gi anh ay la nguoi yeu cua minhla nguoi
+                vua dep trai vua tot bung anh ay qua la dinh minhf uoc gi anh ay
+                la nguoi yeu cua minh uoc gi anh ay la nguoi yeu cua minhla
+                nguoi vua dep trai vua tot bung anh ay qua la dinh minhf uoc gi
+                anh ay la nguoi yeu cua minh uoc gi anh ay la
+              </span>
+            </p>
+          </div>
+        )}
       </div>
       <div className="pl-[40px] w-[30%] ">
         <h3 className="text-[color:var(--primary)] mb-[16px] text-[24px] font-[500]">

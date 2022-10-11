@@ -28,12 +28,15 @@ function MoviePoster({ id, title, src, star, width }) {
           }  hover:cursor-pointer drop-shadow-md  rounded-md`}
           src={src}
         />
-        <div className="absolute flex justify-center items-center top-[10px] left-[10px]  bg-[#6affb996] rounded-lg w-[60px] h-[30px] text-white">
+        <div className="absolute flex w-[60px] h-[30px] mb:w-[40px] mb:h-[20px] mb:text-[10px] mb:font-[600] justify-center items-center top-[10px] left-[10px]  bg-[#6affb996] rounded-lg  text-white">
           {star}
-          <FontAwesomeIcon className="ml-[4px] mt-[-4px]" icon={faStar} />
+          <FontAwesomeIcon
+            className="mb:mt-[-2px] ml-[4px] mt-[-4px]"
+            icon={faStar}
+          />
         </div>
-        <div className="bg-[rgba(0,0,0,0.5)] text-shadow w-full absolute bottom-0  text-white text-center text-[20px] rounded-b-md">
-          <p className="h-[34px] overflow-hidden">{title}</p>
+        <div className="bg-[rgba(0,0,0,0.5)] mb:text-[12px] text-shadow w-full absolute bottom-0  text-white text-center text-[20px] rounded-b-md">
+          <p className="h-[34px] mb:h-[18px] overflow-hidden">{title}</p>
         </div>
       </Link>
     </div>

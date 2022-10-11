@@ -96,15 +96,15 @@ function Header() {
         id: doc.id,
       }));
     });
-    const unregisterAuthObserver = firebase
-      .auth()
-      .onAuthStateChanged((user) => {
-        if (user) {
-          dispatch(fireBaseSlice.actions.setUserInfor(user._delegate));
-          dispatch(fireBaseSlice.actions.setSignIn(!!user));
-        }
-      });
-    return () => unregisterAuthObserver();
+    // const unregisterAuthObserver = firebase
+    //   .auth()
+    //   .onAuthStateChanged((user) => {
+    //     if (user) {
+    //       dispatch(fireBaseSlice.actions.setUserInfor(user._delegate));
+    //       dispatch(fireBaseSlice.actions.setSignIn(!!user));
+    //     }
+    //   });
+    // return () => unregisterAuthObserver();
   }, []);
   return (
     <div className="bg-neutral-900 fixed top-0 w-full z-20 h-14">
@@ -115,8 +115,11 @@ function Header() {
             <Link to={routes.Home} className="flex items-center justify-center">
               <IconMain />
             </Link>
-            <Button to={routes.Home}>Home</Button>
+            <Button className="mb:hidden" to={routes.Home}>
+              Home
+            </Button>
             <Button
+              className="mb:hidden"
               onClick={() =>
                 handleScrollIntoView(document.querySelector("#TopRated"))
               }
@@ -124,6 +127,7 @@ function Header() {
               Top Rated
             </Button>
             <Button
+              className="mb:hidden"
               onClick={() =>
                 handleScrollIntoView(document.querySelector("#UpComing"))
               }
@@ -146,7 +150,7 @@ function Header() {
                 </div>
               )}
             >
-              <Button>
+              <Button className="mb:hidden">
                 Category
                 <span>
                   <FontAwesomeIcon
@@ -157,7 +161,7 @@ function Header() {
               </Button>
             </Tippy>
           </div>
-          <div className="flex bg-zinc-700 relative rounded-full items-center  ">
+          <div className="flex mb:ml-[10px] bg-zinc-700 relative rounded-full items-center  ">
             <input
               ref={inputEle}
               onBlur={handleBlurSearchInput}
@@ -165,7 +169,7 @@ function Header() {
               placeholder="Tìm kiếm"
               onFocus={handleFocusSearchInput}
               onKeyDown={handleSubmitSearch}
-              className="outline-0 rounded-full h-9 w-[280px] bg-inherit text-sm p-2 py-3 text-zinc-200"
+              className="outline-0 rounded-full h-9 w-[280px] mb:w-[200px] bg-inherit text-sm p-2 py-3 text-zinc-200"
             />
             <span className="px-4 border-l-[1px] border-[color:var(--primary)] text-[color:var(--primary)]">
               <FontAwesomeIcon
@@ -202,13 +206,13 @@ function Header() {
             )}
           </div>
           <div className="flex justify-center items-center">
-            <Button className="mr-2">
+            <Button className="mr-2 mb:hidden">
               <FontAwesomeIcon className="text-2xl mt-1" icon={faBell} />
             </Button>
             {!isSingIn && (
               <button
                 onClick={() => dispatch(logInSlice.actions.setLogIn())}
-                className="h-8 flex items-center w-[120px] justify-center rounded-md px-3 transition-all text-white  font-semibold hover:bg-green-300   py-2 bg-green-500"
+                className="h-8 mb:hidden flex items-center w-[120px] justify-center rounded-md px-3 transition-all text-white  font-semibold hover:bg-green-300   py-2 bg-green-500"
               >
                 Đăng nhập
               </button>

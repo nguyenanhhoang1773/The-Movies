@@ -73,9 +73,8 @@ function Home() {
     upComingMovies.length,
     topRatedMovies.length,
   ]);
-  console.log(isLoading);
   return (
-    <div className="pt-[40px]">
+    <div className="pt-[40px] mb:pt-[20px]">
       {!isLoading && (
         <Loading className="w-[80px] h-[80px] absolute top-[45%] left-[47%]" />
       )}
@@ -91,22 +90,28 @@ function Home() {
               nowPlayingMovies.map(
                 ({ id, title, backdrop_path, genres }, index) => (
                   <div key={index}>
-                    <div className="relative m-auto w-[1280px] h-[500px]">
+                    <div className="relative m-auto w-[1280px] mb:px-[10px] mb:w-full mb:h-auto h-[500px] ">
                       <Link to={`/movies/${id}`}>
                         <img
                           alt="Img Error"
-                          className="m-auto w-[1280px] h-[500px] hover:cursor-pointer brightness-[0.9] rounded-lg object-cover"
+                          className="m-auto w-[1280px] mb:w-full h-[500px] mb:h-auto hover:cursor-pointer brightness-[0.9] rounded-lg object-cover"
                           src={`https://image.tmdb.org/t/p/original/${backdrop_path}`}
                         />
                       </Link>
-                      <div className="absolute ml-[20px] mb-[100px] bottom-0">
-                        <h3 className="text-[30px] mb-[20px] font-[600] text-white text-shadow ">
+                      <div className="absolute mb:mb-[20px] ml-[20px] mb-[100px] bottom-0">
+                        <h3 className="text-[30px] mb-[20px] mb:mb-[10px] mb:text-[24px] font-[600] text-white text-shadow ">
                           {title}
                         </h3>
-                        {genres &&
-                          genres.map((genre, index) => {
-                            return <ButtonGenre key={index} title={genre} />;
-                          })}
+                        <div>
+                          {genres &&
+                            genres.map((genre, index) => {
+                              if (index <= 2) {
+                                return (
+                                  <ButtonGenre key={index} title={genre} />
+                                );
+                              }
+                            })}
+                        </div>
                       </div>
                     </div>
                   </div>

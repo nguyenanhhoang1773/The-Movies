@@ -20,6 +20,7 @@ function Search() {
     document.querySelector("body").scrollIntoView({
       block: "start",
     });
+    setLoading(false);
     if (genresSelector.genres.length > 0) {
       genreId.current = findIdGenre(nameGenre, genresSelector);
       const fetchMovies = async () => {
@@ -37,8 +38,11 @@ function Search() {
           <div className="text-[24px] font-[600] ml-[10px] mb-[40px] text-slate-700  ">
             <span className="bg-slate-700">LoadingTime</span>
           </div>
-          {loadingArr.map((value) => (
-            <div className="w-[20%] h-[450px] rounded-md inline-block p-[10px] ">
+          {loadingArr.map((value, index) => (
+            <div
+              key={index}
+              className="w-[20%] h-[450px] rounded-md inline-block p-[10px] "
+            >
               <div className="relative bg-slate-700 h-full rounded-md">
                 <div className="absolute bg-slate-500 top-[20px] left-[20px]  w-[60px] h-[30px] rounded-md"></div>
                 <div className="absolute bottom-0 left-0 right-0 bg-[rgba(0,0,0,0.2)] h-[40px]"></div>
