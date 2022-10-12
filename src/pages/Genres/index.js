@@ -17,9 +17,6 @@ function Search() {
   const { nameGenre } = useParams();
   const genreId = useRef();
   useEffect(() => {
-    document.querySelector("body").scrollIntoView({
-      block: "start",
-    });
     setLoading(false);
     if (genresSelector.genres.length > 0) {
       genreId.current = findIdGenre(nameGenre, genresSelector);

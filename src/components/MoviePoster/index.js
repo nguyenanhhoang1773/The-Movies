@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 function MoviePoster({ id, title, src, star, width }) {
   const imgEle = useRef();
   useEffect(() => {
+    console.log(imgEle.current.width);
     imgEle.current.style.height = imgEle.current.width * 1.5 + "px";
   }, []);
   return (
@@ -24,7 +25,7 @@ function MoviePoster({ id, title, src, star, width }) {
           ref={imgEle}
           alt="ac"
           className={`${
-            width ? "w-full" : "w-[220px]"
+            width ? width : "w-[220px]"
           }  hover:cursor-pointer drop-shadow-md  rounded-md`}
           src={src}
         />

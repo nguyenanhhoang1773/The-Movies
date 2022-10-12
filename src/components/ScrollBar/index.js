@@ -1,11 +1,21 @@
 import { useEffect, useRef } from "react";
-
-function ScrollBar({ classNameWrapper, classNameScrollEle, height, children }) {
+import { useParams } from "react-router-dom";
+function ScrollBar({
+  classNameWrapper,
+  classNameScrollEle,
+  heightContent,
+  height,
+  children,
+}) {
+  const { nameGenre } = useParams();
   const scrollBarEle = useRef();
   const wrapperEle = useRef();
+  const contentWrapper = useRef();
   useEffect(() => {
     scrollBarEle.current.style.height = height + "px";
-  }, []);
+    contentWrapper.current.style.height = heightContent;
+    scrollBarEle.current.style.top = 0;
+  }, [nameGenre]);
   const handleScroll = (e) => {
     const height =
       wrapperEle.current.offsetHeight - scrollBarEle.current.offsetHeight;
@@ -17,6 +27,7 @@ function ScrollBar({ classNameWrapper, classNameScrollEle, height, children }) {
   return (
     <div ref={wrapperEle} className={`relative ${classNameWrapper}`}>
       <div
+        ref={contentWrapper}
         onScroll={handleScroll}
         className={`overflow-scroll ${classNameScrollEle}`}
       >

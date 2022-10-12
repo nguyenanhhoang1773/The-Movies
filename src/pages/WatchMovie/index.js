@@ -5,8 +5,12 @@ import recommentService from "~/apiServices/recommentService";
 import { useParams } from "react-router-dom";
 import Loading from "~/components/Loading";
 import ScrollBar from "~/components/ScrollBar";
+import { useMediaQuery } from "react-responsive";
+import MoviePoster from "~/components/MoviePoster";
 function WatchMovie() {
+  const isMoblie = useMediaQuery({ minWidth: 326, maxWidth: 600 });
   const scrollBarEle = useRef();
+  const video = useRef();
   const [movie, setMovie] = useState({});
   let { idMovie } = useParams();
   const [recomment, setRecomment] = useState([]);
@@ -22,32 +26,40 @@ function WatchMovie() {
     fetchMovie();
     fetchRecomment();
   }, [idMovie]);
+  useEffect(() => {}, []);
 
   return (
-    <div className="flex min-h-[1000px] justify-between px-[40px] py-[60px]">
-      <div className=" mt-[50px]">
+    <div className="flex mb:block min-h-[1000px] mb:justify-center justify-between px-[40px] py-[60px] mb:py-0 mb:px-[30px]">
+      <div className=" mt-[50px] mb:flex mb:justify-center mb:flex-col mb:mt-[30px] ">
         <div className="relative">
           <iframe
+            ref={video}
             title="Movie"
             allowFullScreen
-            className="relative w-[1000px] h-[500px] z-10"
+            className="relative mb:w-[300px] mb:h-auto w-[1000px] h-[500px] z-10"
             src={`https://www.2embed.to/embed/tmdb/movie?id=${idMovie}`}
           ></iframe>
-          <div className="absolute flex justify-center items-center top-0 bottom-0 left-0 right-0 z-0 bg-zinc-900">
+          <div className="absolute mb:w-[300px] flex justify-center items-center top-0 bottom-0 left-0 right-0 z-0 bg-zinc-900">
             <Loading className="w-[40px] h-[40px]" />
           </div>
         </div>
         {movie.title && (
           <div>
-            <h3 className=" text-[color:var(--primary)] font-[600] mt-[16px] text-[24px]">
+            <h3 className=" text-[color:var(--primary)] font-[600] mt-[16px] text-[24px] mb:w-[300px]">
               {movie.title}
             </h3>
-            <p className="text-white w-[1000px] mt-6px">
+            <p className="text-white mb:w-[300px] mb:h-[100px] mb:overflow-hidden w-[1000px] mt-6px">
               <span className="text-[20px] font-[500] text-[color:var(--primary)] mr-[4px]">
                 Overview :
               </span>
               {movie.overview}
-            </p>{" "}
+            </p>
+            <span className="hidden mb:inline text-white">
+              ...
+              <span className="hidden mb:inline ml-[4px] underline text-[color:var(--primary)]">
+                Read more
+              </span>
+            </span>
           </div>
         )}
         {!movie.title && (
@@ -70,25 +82,45 @@ function WatchMovie() {
           </div>
         )}
       </div>
-      <div className="pl-[40px] w-[30%] ">
-        <h3 className="text-[color:var(--primary)] mb-[16px] text-[24px] font-[500]">
+      <div className=" pl-[40px] mb:w-full mb:mt-[20px] mb:pl-0 w-[30%] ">
+        <h3 className="text-[color:var(--primary)] mb-[16px] mb:mb-0 mb:text-center text-[24px] font-[500]">
           Recommendations
         </h3>
-        <ScrollBar
-          classNameWrapper=" bg-[rgba(0,0,0,0.3)] py-[10px] rounded-[4px] pl-[10px] overflow-hidden"
-          classNameScrollEle="h-[700px]"
-          height={160}
-        >
-          {recomment.map(({ id, title, poster_path, vote_average }, index) => (
-            <RecommentMovie
-              key={id}
-              id={id}
-              title={title}
-              src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-              star={vote_average}
-            />
-          ))}
-        </ScrollBar>
+        {!isMoblie && (
+          <ScrollBar
+            classNameWrapper=" bg-[rgba(0,0,0,0.3)] py-[10px] rounded-[4px] pl-[10px] overflow-hidden"
+            classNameScrollEle="h-[700px]"
+            height={160}
+          >
+            {recomment.map(
+              ({ id, title, poster_path, vote_average }, index) => (
+                <RecommentMovie
+                  key={id}
+                  id={id}
+                  title={title}
+                  src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                  star={vote_average}
+                />
+              )
+            )}
+          </ScrollBar>
+        )}
+        {isMoblie && (
+          <div className="w-full flex flex-wrap justify-between">
+            {recomment.map(
+              ({ id, title, poster_path, vote_average }, index) => (
+                <MoviePoster
+                  width="w-[160px]"
+                  key={id}
+                  id={id}
+                  title={title}
+                  src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                  star={vote_average}
+                />
+              )
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

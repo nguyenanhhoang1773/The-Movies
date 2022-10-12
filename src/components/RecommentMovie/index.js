@@ -8,7 +8,7 @@ function RecommentMovie({ id, title, src, star }) {
         onClick={() => {
           navigate(`/movies/${id}`);
         }}
-        className="w-[180px] rounded-md hover:cursor-pointer "
+        className="w-[180px] mb:w-[400px] rounded-md hover:cursor-pointer "
       />
       <div className=" flex flex-col justify-between ml-[16px]">
         <h3 className="text-white text-[22px] mt-[14px] ml-[20px] font-[500]">
