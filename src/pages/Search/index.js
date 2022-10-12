@@ -18,7 +18,7 @@ function Search() {
     <div>
       {isMovie.length > 0 && (
         <div>
-          <div className="pt-[40px] mb:pt-[20px]">
+          <div className=" mb:pt-[20px]">
             <div className="text-[24px] font-[600] ml-[10px] mb-[10px] text-white">
               Search: {textSearch}
             </div>

@@ -6,7 +6,7 @@ function ButtonGenre({ title }) {
   return (
     <Link
       to="/genre"
-      className={`bg-[color:var(--primary)] hover:bg-green-300 rounded-[8px] text-white text-shadow p-[6px] ${cx(
+      className={`bg-[color:var(--primary)] mb:text-[16px] mb:py-[2px] mb:px-[4px] hover:bg-green-300 rounded-[8px] text-white text-shadow p-[6px] ${cx(
         "button_genre"
       )}`}
     >
