@@ -10,10 +10,13 @@ import MoviePoster from "~/components/MoviePoster";
 function WatchMovie() {
   const isMoblie = useMediaQuery({ minWidth: 326, maxWidth: 600 });
   const scrollBarEle = useRef();
+  const [recommentMovie, setRecommentMovie] = useState(3);
+  const [isOverview, setOverview] = useState(true);
   const video = useRef();
   const [movie, setMovie] = useState({});
   let { idMovie } = useParams();
   const [recomment, setRecomment] = useState([]);
+  const overview = useRef();
   useEffect(() => {
     const fetchMovie = async () => {
       const res = await movieService(idMovie);
@@ -31,35 +34,48 @@ function WatchMovie() {
   return (
     <div className="flex mb:block min-h-[1000px] mb:justify-center justify-between px-[40px] py-[60px] mb:py-0 mb:px-[30px]">
       <div className=" mt-[50px] mb:flex mb:justify-center mb:flex-col mb:mt-[30px] ">
-        <div className="relative">
-          <iframe
-            ref={video}
-            title="Movie"
-            allowFullScreen
-            className="relative mb:w-[300px] mb:h-auto w-[1000px] h-[500px] z-10"
-            src={`https://www.2embed.to/embed/tmdb/movie?id=${idMovie}`}
-          ></iframe>
-          <div className="absolute mb:w-[300px] flex justify-center items-center top-0 bottom-0 left-0 right-0 z-0 bg-zinc-900">
-            <Loading className="w-[40px] h-[40px]" />
+        <div className="flex w-full justify-center">
+          <div className="relative">
+            <iframe
+              ref={video}
+              title="Movie"
+              allowFullScreen
+              className="relative mb:w-[300px] mb:h-auto w-[1000px] h-[500px] z-10"
+              src={`https://www.2embed.to/embed/tmdb/movie?id=${idMovie}`}
+            ></iframe>
+            <div className="absolute mb:w-[300px] flex justify-center items-center top-0 bottom-0 left-0 right-0 z-0 bg-zinc-900">
+              <Loading className="w-[40px] h-[40px]" />
+            </div>
           </div>
         </div>
         {movie.title && (
-          <div>
+          <div className="flex w-full items-center flex-col">
             <h3 className=" text-[color:var(--primary)] font-[600] mt-[16px] text-[24px] mb:w-[300px]">
               {movie.title}
             </h3>
-            <p className="text-white mb:w-[300px] mb:h-[100px] mb:overflow-hidden w-[1000px] mt-6px">
+            <p
+              ref={overview}
+              className="text-white mb:w-[300px] mb:h-[100px] mb:overflow-hidden w-[1000px] mt-6px"
+            >
               <span className="text-[20px] font-[500] text-[color:var(--primary)] mr-[4px]">
                 Overview :
               </span>
               {movie.overview}
             </p>
-            <span className="hidden mb:inline text-white">
-              ...
-              <span className="hidden mb:inline ml-[4px] underline text-[color:var(--primary)]">
-                Read more
+            {isOverview && (
+              <span className="hidden mb:inline w-[300px] text-white">
+                ...
+                <span
+                  onClick={() => {
+                    overview.current.style.height = "auto";
+                    setOverview(false);
+                  }}
+                  className="hidden mb:inline ml-[4px] underline text-[color:var(--primary)]"
+                >
+                  Read more
+                </span>
               </span>
-            </span>
+            )}
           </div>
         )}
         {!movie.title && (
@@ -108,16 +124,30 @@ function WatchMovie() {
         {isMoblie && (
           <div className="w-full flex flex-wrap justify-between">
             {recomment.map(
-              ({ id, title, poster_path, vote_average }, index) => (
-                <MoviePoster
-                  width="w-[160px]"
-                  key={id}
-                  id={id}
-                  title={title}
-                  src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-                  star={vote_average}
-                />
-              )
+              ({ id, title, poster_path, vote_average }, index) => {
+                if (index <= recommentMovie) {
+                  return (
+                    <MoviePoster
+                      width="w-[150px]"
+                      key={id}
+                      id={id}
+                      title={title}
+                      src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                      star={vote_average}
+                    />
+                  );
+                }
+              }
+            )}
+            {recommentMovie < 4 && (
+              <div className="flex justify-center items-center mt-[8px] w-full">
+                <div
+                  onClick={() => setRecommentMovie(99)}
+                  className="flex  justify-center items-center hover:bg-green-300 text-white font-[500] text-shadow w-[100px] h-[40px] bg-[color:var(--primary)] rounded-full"
+                >
+                  <span>Show more</span>
+                </div>
+              </div>
             )}
           </div>
         )}
