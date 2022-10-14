@@ -65,7 +65,7 @@ function Home() {
       upComingMovies.length > 0 &&
       topRatedMovies.length > 0
     ) {
-      // setIsLoading(true);
+      setIsLoading(true);
     }
   }, [
     dispatch,
@@ -75,9 +75,7 @@ function Home() {
   ]);
   return (
     <div className="pt-[40px] mb:pt-[20px]">
-      {!isLoading && (
-        <Loading className="w-[80px] h-[80px] absolute translate-x-full top-[50%] left-[50%]" />
-      )}
+      {!isLoading && <Loading />}
       {isLoading && (
         <div>
           <SliderPoster

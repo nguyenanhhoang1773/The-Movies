@@ -30,7 +30,7 @@ function MoviePoster({ id, title, src, star, width }) {
           src={src}
         />
         <div className="absolute flex w-[60px] h-[30px] mb:w-[40px] mb:h-[20px] mb:text-[10px] mb:font-[600] justify-center items-center top-[10px] left-[10px]  bg-[#6affb996] rounded-lg  text-white">
-          {star}
+          {Math.ceil(star * 10) / 10}
           <FontAwesomeIcon
             className="mb:mt-[-2px] ml-[4px] mt-[-4px]"
             icon={faStar}

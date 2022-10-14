@@ -13,11 +13,13 @@ function Loading({ className }) {
     );
   }, []);
   return (
-    <FontAwesomeIcon
-      ref={loadingEle}
-      className={`${className} text-[color:var(--primary)]`}
-      icon={faSpinner}
-    />
+    <div className="absolute top-[40%] left-[50%] translateCenter">
+      <FontAwesomeIcon
+        ref={loadingEle}
+        className={`${className} w-[80px] h-[80px]   text-[color:var(--primary)]`}
+        icon={faSpinner}
+      />
+    </div>
   );
 }
 
