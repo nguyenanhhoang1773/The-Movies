@@ -15,7 +15,7 @@ function ScrollBar({
     scrollBarEle.current.style.height = height + "px";
     contentWrapper.current.style.height = heightContent;
     scrollBarEle.current.style.top = 0;
-  }, [nameGenre]);
+  }, [nameGenre, heightContent]);
   const handleScroll = (e) => {
     const height =
       wrapperEle.current.offsetHeight - scrollBarEle.current.offsetHeight;
