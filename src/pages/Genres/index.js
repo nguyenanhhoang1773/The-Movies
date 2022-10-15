@@ -9,7 +9,7 @@ import genreMoviesSlice from "~/redux/Slice/genreMoviesSlice";
 import { findIdGenre } from "~/hooks";
 
 const loadingArr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, , 1, 1, 1, 1];
-function Search() {
+function Genres() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const movies = useSelector(genreMOviesSelector);
@@ -31,14 +31,14 @@ function Search() {
   return (
     <div>
       {!loading && (
-        <div className="pt-[40px] pb-[80px]">
-          <div className="text-[24px] font-[600] ml-[10px] mb-[40px] text-slate-700  ">
+        <div className="pt-[40px] mb:py-[20px] pb-[80px]">
+          <div className="text-[24px] font-[600] mb:mb-[10px] ml-[10px] mb-[40px] text-slate-700  ">
             <span className="bg-slate-700">LoadingTime</span>
           </div>
           {loadingArr.map((value, index) => (
             <div
               key={index}
-              className="w-[20%] h-[450px] rounded-md inline-block p-[10px] "
+              className="w-[20%] mb:w-[50%] mb:h-[280px] h-[450px] rounded-md inline-block p-[10px] "
             >
               <div className="relative bg-slate-700 h-full rounded-md">
                 <div className="absolute bg-slate-500 top-[20px] left-[20px]  w-[60px] h-[30px] rounded-md"></div>
@@ -49,15 +49,16 @@ function Search() {
         </div>
       )}
       {loading && (
-        <div className="pt-[40px] pb-[80px]">
-          <div className="text-[24px] font-[600] ml-[10px] mb-[40px] text-[color:var(--primary)]">
+        <div className="pt-[40px] mb:py-[20px] pb-[80px]">
+          <div className="text-[24px] font-[600] ml-[10px] mb:mb-[10px] mb-[40px] text-[color:var(--primary)]">
             {nameGenre}
           </div>
           {movies.map(
             ({ id, poster_path, original_title, vote_average }, index) => {
               return (
                 <MoviePoster
-                  width="w-[20%]"
+                  width="w-[20%] mb:w-[50%]"
+                  imgWidth="w-full"
                   key={index}
                   id={id}
                   src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
@@ -74,4 +75,4 @@ function Search() {
   );
 }
 
-export default Search;
+export default Genres;

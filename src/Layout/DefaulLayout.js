@@ -3,8 +3,8 @@ import ScrollBar from "~/components/ScrollBar";
 import { useEffect, useRef, useState } from "react";
 
 function DefaultLayout({ children }) {
-  const heightWindow = window.innerHeight - 56 + "px";
   const wrapper = useRef();
+  const heightWindow = window.innerHeight - 56 + "px";
   useEffect(() => {
     wrapper.current.style.minHeight = heightWindow;
   }, []);

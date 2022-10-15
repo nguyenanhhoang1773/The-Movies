@@ -5,7 +5,9 @@ import Tippy from "@tippyjs/react/headless";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "~/components/Button";
 import {
+  faBars,
   faCaretDown,
+  faCaretUp,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
@@ -40,6 +42,11 @@ function Header() {
   const [isShowHead, setShowHeader] = useState(false);
   const [listResultSearch, setListResultSearch] = useState([]);
   const [isListSearch, setIsListSearch] = useState(false);
+  const [showGenreMb, setShowGenreMb] = useState(false);
+  const [showBar, setShowBar] = useState(false);
+  const genreMb = useRef();
+  const barELe = useRef();
+  const [showBarList, setShowBarList] = useState(false);
   const handleFocusSearchInput = (e) => {
     setIsListSearch(true);
   };
@@ -110,7 +117,7 @@ function Header() {
     <div className="bg-neutral-900 fixed top-0 w-full z-20 h-14">
       <div className="fixed flex z-10 justify-center items-center h-14 top-0 w-full ">
         {logIn && !isSingIn && <ModalLogIn />}
-        <div className="flex items-center h-full w-11/12 justify-between">
+        <div className="flex mb:w-full mb:pl-[10px] items-center h-full w-11/12 justify-between">
           <div className="flex ">
             <Link to={routes.Home} className="flex items-center justify-center">
               <IconMain />
@@ -169,19 +176,21 @@ function Header() {
               placeholder="Tìm kiếm"
               onFocus={handleFocusSearchInput}
               onKeyDown={handleSubmitSearch}
-              className="outline-0 rounded-full h-9 w-[280px] mb:w-[200px] bg-inherit text-sm p-2 py-3 text-zinc-200"
+              className="outline-0 rounded-full h-9 w-[280px] mb:w-[180px] bg-inherit text-sm p-2 py-3 text-zinc-200"
             />
-            <span className="px-4 border-l-[1px] border-[color:var(--primary)] text-[color:var(--primary)]">
+            <span className="px-4 mb:px-[8px] border-l-[1px] border-[color:var(--primary)] text-[color:var(--primary)]">
               <FontAwesomeIcon
-                onClick={() =>
-                  navigate(`/movies/search/${inputEle.current.value}`)
-                }
+                onClick={() => {
+                  if (inputEle.current.value.trim()) {
+                    navigate(`/movies/search/${inputEle.current.value}`);
+                  }
+                }}
                 className="cursor-pointer hover:text-green-300"
                 icon={faMagnifyingGlass}
               />
             </span>
             {isListSearch && listResultSearch.length > 0 && (
-              <div className="bg-green-300  w-[420px] p-[4px] absolute top-[60px] rounded-md w-[var(--type-row-width)] text-white">
+              <div className="bg-green-600 mb:fixed mb:left-0 mb:right-0 mb:top-[56px] mb:w-full  w-[420px] p-[2px] pb-[4px] absolute top-[60px] rounded-md w-[var(--type-row-width)] text-white">
                 <div className="overflow-auto scroll-bar max-h-[400px] ">
                   {listResultSearch.map(
                     (
@@ -205,14 +214,14 @@ function Header() {
               </div>
             )}
           </div>
-          <div className="flex justify-center items-center">
-            <Button className="mr-2 mb:hidden">
+          <div className="flex mb:hidden justify-center items-center">
+            <Button className="mr-2 ">
               <FontAwesomeIcon className="text-2xl mt-1" icon={faBell} />
             </Button>
             {!isSingIn && (
               <button
                 onClick={() => dispatch(logInSlice.actions.setLogIn())}
-                className="h-8 mb:hidden flex items-center w-[120px] justify-center rounded-md px-3 transition-all text-white  font-semibold hover:bg-green-300   py-2 bg-green-500"
+                className="h-8 flex items-center w-[120px] justify-center rounded-md px-3 transition-all text-white  font-semibold hover:bg-green-300   py-2 bg-green-500"
               >
                 Đăng nhập
               </button>
@@ -223,6 +232,92 @@ function Header() {
                 className="w-[30px] h-[30px] rounded-full cursor-pointer"
               />
             )}
+          </div>
+          <div className="hidden mb:block ">
+            <Button
+              onClick={() => {
+                setShowBar((prev) => !prev);
+                if (!showBarList) {
+                  barELe.current.style.transform = "translateX(0)";
+                } else {
+                  barELe.current.style.transform = "translateX(-100%)";
+                }
+                setShowBarList((prev) => !prev);
+                if (showGenreMb) {
+                  setShowGenreMb(false);
+                  genreMb.current.style.transform = "translateX(-110%)";
+                }
+              }}
+              className="mr-2 mb:px-[10px] mb:w-[54px] mb:m-0 "
+            >
+              <FontAwesomeIcon className="text-2xl mt-1 " icon={faBars} />
+            </Button>
+          </div>
+          {showBar && (
+            <div
+              onClick={(e) => {
+                if (!e.target.closest(".listMenu")) {
+                  setShowBar(false);
+                  setShowBarList(false);
+                  barELe.current.style.transform = "translateX(-100%)";
+                }
+              }}
+              className="fixed top-[56px] right-0 bottom-0 left-0 bg-[rgba(0,0,0,0.5)]"
+            ></div>
+          )}
+          <div
+            ref={barELe}
+            className="listMenu fixed transition-all top-[56px] translate-x-[-100%] left-0 bottom-0 w-[85%] bg-[rgba(0,0,0,0.8)]"
+          >
+            <ul className="px-[16px] py-[20px]">
+              <li className="flex flex-col justify-between text-shadow text-[color:var(--primary)] text-[28px] font-[600]">
+                <div className="flex justify-between">
+                  <h3 className="">Category</h3>
+                  {!showGenreMb && (
+                    <span
+                      onClick={() => {
+                        setShowGenreMb(true);
+                        genreMb.current.style.transform = "translateX(0)";
+                      }}
+                      className="px-[16px]"
+                    >
+                      <FontAwesomeIcon icon={faCaretDown} />
+                    </span>
+                  )}
+                  {showGenreMb && (
+                    <span
+                      onClick={() => {
+                        setShowGenreMb(false);
+                        genreMb.current.style.transform = "translateX(-110%)";
+                      }}
+                      className="px-[16px]"
+                    >
+                      <FontAwesomeIcon icon={faCaretUp} />
+                    </span>
+                  )}
+                </div>
+
+                <div
+                  ref={genreMb}
+                  className=" mt-[10px] mb:translate-x-[-110%] transition-all "
+                >
+                  {genresSelector.genres.map(({ id, name }) => {
+                    return (
+                      <ButtonType
+                        className="mb:text-white  h-[32px] mb:font-[500]  mb:hover:text-[color:var(--primary)] overflow-hidden mb:w-[33.33%]"
+                        onClick={() => {
+                          setShowBar(false);
+                          barELe.current.style.transform = "translateX(-100%)";
+                          setShowBarList((prev) => !prev);
+                        }}
+                        key={id}
+                        title={name}
+                      />
+                    );
+                  })}
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

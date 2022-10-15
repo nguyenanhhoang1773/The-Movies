@@ -2,10 +2,9 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef } from "react";
-function MoviePoster({ id, title, src, star, width }) {
+function MoviePoster({ id, title, src, star, width, imgWidth }) {
   const imgEle = useRef();
   useEffect(() => {
-    console.log(imgEle.current.width);
     imgEle.current.style.height = imgEle.current.width * 1.5 + "px";
   }, []);
   return (
@@ -25,7 +24,7 @@ function MoviePoster({ id, title, src, star, width }) {
           ref={imgEle}
           alt="ac"
           className={`${
-            width ? width : "w-[220px]"
+            imgWidth ? imgWidth : "w-[220px]"
           }  hover:cursor-pointer drop-shadow-md  rounded-md`}
           src={src}
         />

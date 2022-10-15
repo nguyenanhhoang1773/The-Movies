@@ -49,7 +49,7 @@ function WatchMovie() {
           </div>
         </div>
         {movie.title && (
-          <div className="flex w-full items-center flex-col">
+          <div className="flex w-full mb:items-center flex-col">
             <h3 className=" text-[color:var(--primary)] font-[600] mt-[16px] text-[24px] mb:w-[300px]">
               {movie.title}
             </h3>

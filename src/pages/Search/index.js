@@ -20,13 +20,15 @@ function Search() {
         <div>
           <div className=" mb:pt-[20px]">
             <div className="text-[24px] font-[600] ml-[10px] mb-[10px] text-white">
-              Search: {textSearch}
+              <span className="text-[color:var(--primary)]">Search:</span>{" "}
+              {textSearch}
             </div>
             {isMovie.map(
               ({ id, poster_path, original_title, vote_average }, index) => {
                 return (
                   <MoviePoster
-                    width="w-[16.6%]"
+                    imgWidth="w-full"
+                    width="w-[16.6%] mb:w-[50%]"
                     key={index}
                     id={id}
                     src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
