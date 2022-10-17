@@ -1,5 +1,5 @@
 const routes = {
-  Home: "/The-Movies",
+  Home: "/",
   Profile: "/profile",
   WatchMovie: "/movies/:idMovie",
   Search: "/movies/search/:textSearch",
