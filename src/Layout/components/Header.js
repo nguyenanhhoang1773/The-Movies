@@ -1,5 +1,5 @@
 import { IconMain } from "~/components/icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import routes from "~/config/routes/routes";
 import Tippy from "@tippyjs/react/headless";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,14 +31,18 @@ import fireBaseSlice from "~/redux/Slice/fireBaseSlice";
 import ModalLogIn from "~/components/Modal";
 import { db } from "~/firebase/config";
 import firebase from "firebase/compat/app";
+import { getAuth, signInWithCustomToken } from "firebase/auth";
 function Header() {
+  const [user, setUser] = useState("");
   const logIn = useSelector(logInSelector);
   const isSingIn = useSelector(signInSelector);
   const userInfor = useSelector(userInforSelector);
   const genresSelector = useSelector(genreSelector);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const inputEle = useRef();
+  const [isNav, setNav] = useState(false);
   const [isShowHead, setShowHeader] = useState(false);
   const [listResultSearch, setListResultSearch] = useState([]);
   const [isListSearch, setIsListSearch] = useState(false);
@@ -61,12 +65,16 @@ function Header() {
       navigate(`/movies/search/${e.target.value}`);
     }
   };
-  const handleScrollIntoView = (ele) => {
-    ele.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-      inline: "nearest",
-    });
+  const handleClickBtn = (ele, router) => {
+    if (location.pathname !== "/") {
+      navigate(router);
+    } else {
+      ele.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
+      });
+    }
   };
   const handleSearchMovie = (e) => {
     if (e.target.value.trim()) {
@@ -79,6 +87,17 @@ function Header() {
       setListResultSearch([]);
     }
   };
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      dispatch(fireBaseSlice.actions.setSignIn(!!user));
+      dispatch(fireBaseSlice.actions.setUserInfor(user._delegate));
+    }
+  });
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      setNav(true);
+    }
+  }, [location.pathname]);
   useEffect(() => {
     const genres = async () => {
       const res = await genreService();
@@ -93,22 +112,23 @@ function Header() {
     popular();
   }, []);
   useEffect(() => {
-    db.collection("rooms").add({
-      displayName: "abc",
-      mesagge: [{ id: 1, name: "hoang" }],
-    });
-    db.collection("rooms").onSnapshot((snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-    });
+    // db.collection("rooms").add({
+    //   displayName: "abc",
+    //   mesagge: [{ id: 1, name: "hoang" }],
+    // });
+    // db.collection("rooms").onSnapshot((snapshot) => {
+    //   const data = snapshot.docs.map((doc) => ({
+    //     ...doc.data(),
+    //     id: doc.id,
+    //   }));
+    // });
     // const unregisterAuthObserver = firebase
     //   .auth()
     //   .onAuthStateChanged((user) => {
+    //     console.log(user);
     //     if (user) {
-    //       dispatch(fireBaseSlice.actions.setUserInfor(user._delegate));
     //       dispatch(fireBaseSlice.actions.setSignIn(!!user));
+    //       dispatch(fireBaseSlice.actions.setUserInfor(user._delegate));
     //     }
     //   });
     // return () => unregisterAuthObserver();
@@ -125,22 +145,45 @@ function Header() {
             <Button className="mb:hidden" to={routes.Home}>
               Home
             </Button>
-            <Button
-              className="mb:hidden"
-              onClick={() =>
-                handleScrollIntoView(document.querySelector("#TopRated"))
-              }
-            >
-              Top Rated
-            </Button>
-            <Button
-              className="mb:hidden"
-              onClick={() =>
-                handleScrollIntoView(document.querySelector("#UpComing"))
-              }
-            >
-              Up Coming
-            </Button>
+            {!isNav && (
+              <Button
+                className="mb:hidden"
+                onClick={() =>
+                  handleClickBtn(document.querySelector("#TopRated"))
+                }
+              >
+                Top Rated
+              </Button>
+            )}
+            {isNav && (
+              <Button to="/movies/alloftype/top_rated" className="mb:hidden">
+                Top Rated
+              </Button>
+            )}
+            {!isNav && (
+              <Button
+                className="mb:hidden"
+                onClick={() =>
+                  handleClickBtn(document.querySelector("#UpComing"))
+                }
+              >
+                Up Coming
+              </Button>
+            )}
+            {isNav && (
+              <Button
+                to="/movies/alloftype/upcoming"
+                className="mb:hidden"
+                onClick={() =>
+                  handleClickBtn(
+                    document.querySelector("#UpComing"),
+                    "/movies/alloftype/upcoming"
+                  )
+                }
+              >
+                Up Coming
+              </Button>
+            )}
 
             <Tippy
               interactive
@@ -226,7 +269,7 @@ function Header() {
                 Đăng nhập
               </button>
             )}
-            {userInfor.photoURL && (
+            {isSingIn && (
               <img
                 src={userInfor.photoURL}
                 className="w-[30px] h-[30px] rounded-full cursor-pointer"

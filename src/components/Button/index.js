@@ -4,9 +4,9 @@ function Button({ to, className, children, onClick }, ref) {
   const Tag = to ? NavLink : "div";
   const handleActive = (nav) => {
     if (nav.isActive) {
-      return `text-[color:var(--primary)] transition-all font-medium text-lg p-3  ${className}`;
+      return `text-[color:var(--primary)] px-[20px]   transition-all font-medium text-lg p-3  ${className}`;
     } else {
-      return `text-white hover:text-[color:var(--primary)] cursor-pointer  transition-all font-medium text-lg p-3  ${className}`;
+      return `text-white hover:text-[color:var(--primary)] px-[20px]  cursor-pointer  transition-all font-medium text-lg p-3  ${className}`;
     }
   };
   return (
@@ -17,7 +17,7 @@ function Button({ to, className, children, onClick }, ref) {
       className={
         Tag === NavLink
           ? handleActive
-          : ` ${className} text-white w-[140px] text-center hover:text-[color:var(--primary)] cursor-pointer transition-all font-medium text-lg p-3  ${className}`
+          : ` ${className} text-white text-center px-[20px] hover:text-[color:var(--primary)] cursor-pointer transition-all font-medium text-lg p-3  ${className}`
       }
     >
       {children}

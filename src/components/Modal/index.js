@@ -5,14 +5,13 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userInforSelector, signInSelector } from "~/redux/Selector";
 import fireBaseSlice from "~/redux/Slice/fireBaseSlice";
-import { db } from "~/firebase/config";
+import { db, auth } from "~/firebase/config";
 
 const uiConfig = {
   signInFlow: "popup",
   signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
 };
 function ModalLogIn() {
-  // const room = useFirestore
   const isSingIn = useSelector(signInSelector);
   return (
     <div className="fixed justify-center items-center z-50 top-0 right-0 left-0 bottom-0 bg-[rgba(0,0,0,0.6)] flex">

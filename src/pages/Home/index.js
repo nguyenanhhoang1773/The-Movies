@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
-import nowPlayingServices from "~/apiServices/nowPlayingServices";
-import topRatedServices from "~/apiServices/topRatedServices";
 import MoviesListType from "~/components/MoviesListType";
 import MoviePoster from "~/components/MoviePoster";
-import upComingService from "~/apiServices/upComingService";
 import SliderPoster from "~/components/Slider";
 import genresService from "~/apiServices/genresService";
 import ButtonGenre from "~/components/ButtonGenre";
@@ -18,6 +15,7 @@ import NowPlayingSlice from "~/redux/Slice/nowPlayingSlice";
 import TopRatedSilce from "~/redux/Slice/TopRatedSLice";
 import UpComingSlice from "~/redux/Slice/UpComingSlice";
 import Loading from "~/components/Loading";
+import moviesOfType from "~/apiServices/moviesOfType";
 
 function Home() {
   const dispatch = useDispatch();
@@ -33,7 +31,7 @@ function Home() {
       nowPlayingMovies.length === 0
     ) {
       const fetchNowPlayingMovies = async () => {
-        const result = await nowPlayingServices();
+        const result = await moviesOfType("now_playing");
         const genresApi = await genresService();
         result.forEach((obj) => {
           const genres = [];
@@ -48,11 +46,11 @@ function Home() {
         dispatch(NowPlayingSlice.actions.setNowPlaying(result));
       };
       const fetchTopRatedMovie = async () => {
-        const result = await topRatedServices();
+        const result = await moviesOfType("top_rated");
         dispatch(TopRatedSilce.actions.setTopRated(result));
       };
       const fetchUpComingMovie = async () => {
-        const result = await upComingService();
+        const result = await moviesOfType("upcoming");
         dispatch(UpComingSlice.actions.setUpComing(result));
       };
 
@@ -74,13 +72,13 @@ function Home() {
     topRatedMovies.length,
   ]);
   return (
-    <div className="pt-[40px] mb:pt-[20px]">
+    <div className="pt-[20px] mb:pt-[20px]">
       {!isLoading && <Loading />}
       {isLoading && (
         <div>
           <SliderPoster
             customPrev
-            scroll
+            // scroll
             customNext
             props={{ slidesToShow: 1 }}
           >
@@ -88,15 +86,15 @@ function Home() {
               nowPlayingMovies.map(
                 ({ id, title, backdrop_path, genres }, index) => (
                   <div key={index}>
-                    <div className="relative m-auto w-[1280px] mb:px-[10px] mb:w-full mb:h-auto h-[500px] ">
+                    <div className="m-auto relative  w-[95%] mb:px-[10px] mb:w-full mb:h-auto h-[750px] ">
                       <Link to={`/movies/${id}`}>
                         <img
                           alt="Img Error"
-                          className="m-auto w-[1280px] mb:w-full h-[500px] mb:h-auto hover:cursor-pointer brightness-[0.9] rounded-lg object-cover"
+                          className="m-auto w-[95%] mb:w-full h-[750px] mb:h-auto hover:cursor-pointer brightness-[0.9] rounded-lg object-cover"
                           src={`https://image.tmdb.org/t/p/original/${backdrop_path}`}
                         />
                       </Link>
-                      <div className="absolute mb:mb-[20px] ml-[20px] mb-[100px] bottom-0">
+                      <div className="absolute mb:mb-[20px] mb:ml-[20px] ml-[100px] mb-[180px] bottom-0">
                         <h3 className="text-[30px] mb-[20px] mb:mb-[10px] mb:text-[24px] font-[600] text-white text-shadow ">
                           {title}
                         </h3>
@@ -117,10 +115,11 @@ function Home() {
               )}
           </SliderPoster>
           {nowPlayingMovies.length > 0 && (
-            <MoviesListType title="Now Playing">
+            <MoviesListType type="now_playing" title="Now Playing">
               {nowPlayingMovies.map(
                 ({ id, title, poster_path, vote_average }, index) => (
                   <MoviePoster
+                    scroll
                     id={id}
                     title={title}
                     key={index}
@@ -132,10 +131,15 @@ function Home() {
             </MoviesListType>
           )}
           {topRatedMovies.length > 0 && (
-            <MoviesListType idElement="TopRated" title="Top Rated">
+            <MoviesListType
+              type="top_rated"
+              idElement="TopRated"
+              title="Top Rated"
+            >
               {topRatedMovies.map(
                 ({ id, title, poster_path, vote_average }, index) => (
                   <MoviePoster
+                    scroll
                     id={id}
                     title={title}
                     key={index}
@@ -147,10 +151,15 @@ function Home() {
             </MoviesListType>
           )}
           {upComingMovies.length > 0 && (
-            <MoviesListType idElement="UpComing" title="Up Coming">
+            <MoviesListType
+              type="upcoming"
+              idElement="UpComing"
+              title="Up Coming"
+            >
               {upComingMovies.map(
                 ({ id, title, poster_path, vote_average }, index) => (
                   <MoviePoster
+                    scroll
                     id={id}
                     title={title}
                     key={index}

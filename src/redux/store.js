@@ -5,7 +5,7 @@ import popularSlice from "./Slice/popularSlice";
 import genreSlice from "./Slice/genreSlice";
 import genreMoviesSlice from "./Slice/genreMoviesSlice";
 import logInSlice from "./Slice/logInSlice";
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import fireBaseSlice from "./Slice/fireBaseSlice";
 const store = configureStore({
   reducer: {
@@ -18,5 +18,10 @@ const store = configureStore({
     genres: genreSlice.reducer,
     genreMovies: genreMoviesSlice.reducer,
   },
+  middleware: [
+    ...getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+  ],
 });
 export default store;

@@ -1,6 +1,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/analytics";
 import "firebase/compat/firestore";
+import "firebase/compat/auth";
 const firebaseConfig = {
   apiKey: "AIzaSyBobnPb-5U9zkzq4g0kCOLPs5CQTfxTeXI",
   authDomain: "the-movies-48bb9.firebaseapp.com",
@@ -15,4 +16,5 @@ firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
 // // const analytics = getAnalytics(app);
+export const auth = firebase.auth();
 export const db = firebase.firestore();

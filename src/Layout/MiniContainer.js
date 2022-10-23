@@ -12,7 +12,6 @@ function MiniContainer({ children }) {
       const heightWindow = window.innerHeight - 56 + "px";
       wrapper.current.style.minHeight = heightWindow;
       setResize(heightWindow);
-      console.log(heightWindow);
     };
   }, []);
   return (

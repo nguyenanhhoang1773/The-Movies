@@ -5,6 +5,7 @@ import routes from "~/config/routes/routes";
 import Search from "~/pages/Search";
 import Genres from "~/pages/Genres";
 import MiniContainer from "~/Layout/MiniContainer";
+import AllOfType from "~/pages/AllOfType";
 
 const publicRoutes = [
   {
@@ -28,6 +29,11 @@ const publicRoutes = [
   {
     path: routes.Genres,
     Component: Genres,
+    Layout: MiniContainer,
+  },
+  {
+    path: routes.AllOfType,
+    Component: AllOfType,
     Layout: MiniContainer,
   },
 ];

@@ -1,6 +1,6 @@
 import * as request from "~/untils/request";
-const result = async () => {
-  const res = await request.get("/movie/now_playing");
+const result = async (type) => {
+  const res = await request.get(`/movie/${type}`);
   return res.results;
 };
 export default result;
