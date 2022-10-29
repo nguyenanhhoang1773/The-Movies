@@ -42,7 +42,7 @@ function WatchMovie() {
                   ref={video}
                   title="Movie"
                   allowFullScreen
-                  className="relative mb:w-[300px] mb:h-auto w-full min-w-[400px] h-[500px]  z-10"
+                  className="relative mb:w-[300px] mb:h-auto w-full mb:min-w-0 min-w-[400px] h-[500px]  z-10"
                   src={`https://www.2embed.to/embed/tmdb/movie?id=${idMovie}`}
                 ></iframe>
                 <div className="absolute mb:w-[300px] flex justify-center items-center top-0 bottom-0 left-0 right-0 z-0 bg-zinc-900">

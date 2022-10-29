@@ -335,7 +335,7 @@ function Header() {
                     }}
                     className="flex justify-between p-[10px]"
                   >
-                    <h3 className="">Category</h3>
+                    <h3 className="text-[color:var(--primary)]">Category</h3>
                     {!showGenreMb && (
                       <span className="px-[16px]">
                         <FontAwesomeIcon icon={faCaretDown} />
