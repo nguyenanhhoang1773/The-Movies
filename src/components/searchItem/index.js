@@ -8,8 +8,8 @@ function SearchItem({ id, src, title, star }) {
     >
       <img src={src} className="w-[100px] rounded-md " />
       <div className="flex flex-col justify-between text-white ">
-        <h3 className="text-[24px] font-[600] mt-[14px] max-h-[72px] ml-[20px] overflow-hidden">
-          {title}{" "}
+        <h3 className="text-[24px] text-white  font-[600] mt-[14px] max-h-[72px] ml-[20px] overflow-hidden">
+          {title}
         </h3>
         <button className=" text-[20px] w-[60px] text-[color:var(--primary)] font-[500] p-[2px] rounded-lg border border-white border-[2px] ml-[20px] mb-[12px]">
           {star}

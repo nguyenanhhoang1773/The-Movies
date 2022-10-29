@@ -72,13 +72,13 @@ function Home() {
     topRatedMovies.length,
   ]);
   return (
-    <div className="pt-[20px] mb:pt-[20px]">
-      {!isLoading && <Loading />}
+    <div className="pt-[20px] pb-[28px] mb:pt-[20px]">
+      {!isLoading && <Loading Home />}
       {isLoading && (
         <div>
           <SliderPoster
             customPrev
-            // scroll
+            scroll
             customNext
             props={{ slidesToShow: 1 }}
           >

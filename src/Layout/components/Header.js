@@ -7,6 +7,7 @@ import Button from "~/components/Button";
 import {
   faBars,
   faCaretDown,
+  faCaretRight,
   faCaretUp,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
@@ -29,11 +30,11 @@ import genreSlice from "~/redux/Slice/genreSlice";
 import logInSlice from "~/redux/Slice/logInSlice";
 import fireBaseSlice from "~/redux/Slice/fireBaseSlice";
 import ModalLogIn from "~/components/Modal";
-import { db } from "~/firebase/config";
+// import { db } from "~/firebase/config";
 import firebase from "firebase/compat/app";
-import { getAuth, signInWithCustomToken } from "firebase/auth";
+// import { getAuth, signInWithCustomToken } from "firebase/auth";
 function Header() {
-  const [user, setUser] = useState("");
+  // const [user, setUser] = useState("");
   const logIn = useSelector(logInSelector);
   const isSingIn = useSelector(signInSelector);
   const userInfor = useSelector(userInforSelector);
@@ -43,7 +44,7 @@ function Header() {
   const location = useLocation();
   const inputEle = useRef();
   const [isNav, setNav] = useState(false);
-  const [isShowHead, setShowHeader] = useState(false);
+  // const [isShowHead, setShowHeader] = useState(false);
   const [listResultSearch, setListResultSearch] = useState([]);
   const [isListSearch, setIsListSearch] = useState(false);
   const [showGenreMb, setShowGenreMb] = useState(false);
@@ -51,6 +52,7 @@ function Header() {
   const genreMb = useRef();
   const barELe = useRef();
   const [showBarList, setShowBarList] = useState(false);
+  const typeMovies = useRef();
   const handleFocusSearchInput = (e) => {
     setIsListSearch(true);
   };
@@ -111,6 +113,13 @@ function Header() {
     genres();
     popular();
   }, []);
+  useEffect(() => {
+    if (showGenreMb) {
+      typeMovies.current.style.top = 380 + "px";
+    } else {
+      typeMovies.current.style.top = 60 + "px";
+    }
+  }, [showGenreMb]);
   useEffect(() => {
     // db.collection("rooms").add({
     //   displayName: "abc",
@@ -263,8 +272,8 @@ function Header() {
             </Button>
             {!isSingIn && (
               <button
-                onClick={() => dispatch(logInSlice.actions.setLogIn())}
-                className="h-8 flex items-center w-[120px] justify-center rounded-md px-3 transition-all text-white  font-semibold hover:bg-green-300   py-2 bg-green-500"
+                // onClick={() => dispatch(logInSlice.actions.setLogIn())}
+                className="h-8 flex hover:text-black items-center w-[120px] justify-center rounded-md px-3 transition-all text-white  font-semibold hover:bg-green-300   py-2 bg-green-500"
               >
                 Đăng nhập
               </button>
@@ -312,55 +321,103 @@ function Header() {
             ref={barELe}
             className="listMenu fixed transition-all top-[56px] translate-x-[-100%] left-0 bottom-0 w-[85%] bg-[rgba(0,0,0,0.8)]"
           >
-            <ul className="px-[16px] py-[20px]">
-              <li className="flex flex-col justify-between text-shadow text-[color:var(--primary)] text-[28px] font-[600]">
-                <div className="flex justify-between">
-                  <h3 className="">Category</h3>
-                  {!showGenreMb && (
-                    <span
-                      onClick={() => {
-                        setShowGenreMb(true);
-                        genreMb.current.style.transform = "translateX(0)";
-                      }}
-                      className="px-[16px]"
-                    >
-                      <FontAwesomeIcon icon={faCaretDown} />
-                    </span>
-                  )}
-                  {showGenreMb && (
-                    <span
-                      onClick={() => {
-                        setShowGenreMb(false);
+            <div className=" px-[16px] py-[20px]">
+              <ul className="relative">
+                <li className="flex flex-col justify-between text-shadow text-[color:var(--primary)] text-[28px] font-[600]">
+                  <div
+                    onClick={() => {
+                      setShowGenreMb((prev) => !prev);
+                      if (showGenreMb) {
                         genreMb.current.style.transform = "translateX(-110%)";
-                      }}
-                      className="px-[16px]"
-                    >
-                      <FontAwesomeIcon icon={faCaretUp} />
-                    </span>
-                  )}
-                </div>
+                      } else {
+                        genreMb.current.style.transform = "translateX(0)";
+                      }
+                    }}
+                    className="flex justify-between p-[10px]"
+                  >
+                    <h3 className="">Category</h3>
+                    {!showGenreMb && (
+                      <span className="px-[16px]">
+                        <FontAwesomeIcon icon={faCaretDown} />
+                      </span>
+                    )}
+                    {showGenreMb && (
+                      <span className="px-[16px]">
+                        <FontAwesomeIcon icon={faCaretUp} />
+                      </span>
+                    )}
+                  </div>
 
-                <div
-                  ref={genreMb}
-                  className=" mt-[10px] mb:translate-x-[-110%] transition-all "
+                  <div
+                    ref={genreMb}
+                    className=" mt-[10px] mb:translate-x-[-110%] transition-all "
+                  >
+                    {genresSelector.genres.map(({ id, name }) => {
+                      return (
+                        <ButtonType
+                          className="mb:text-white  h-[32px] mb:font-[500]  mb:hover:text-[color:var(--primary)] overflow-hidden mb:w-[33.33%]"
+                          onClick={() => {
+                            setShowBar(false);
+                            barELe.current.style.transform =
+                              "translateX(-100%)";
+                            setShowBarList((prev) => !prev);
+                          }}
+                          key={id}
+                          title={name}
+                        />
+                      );
+                    })}
+                  </div>
+                </li>
+                <li
+                  ref={typeMovies}
+                  className="absolute transition-all top-[60px]  w-full  text-shadow text-[color:var(--primary)] text-[28px] font-[600]"
                 >
-                  {genresSelector.genres.map(({ id, name }) => {
-                    return (
-                      <ButtonType
-                        className="mb:text-white  h-[32px] mb:font-[500]  mb:hover:text-[color:var(--primary)] overflow-hidden mb:w-[33.33%]"
-                        onClick={() => {
-                          setShowBar(false);
-                          barELe.current.style.transform = "translateX(-100%)";
-                          setShowBarList((prev) => !prev);
-                        }}
-                        key={id}
-                        title={name}
-                      />
-                    );
-                  })}
-                </div>
-              </li>
-            </ul>
+                  <Link
+                    onClick={() => {
+                      setShowBar(false);
+                      barELe.current.style.transform = "translateX(-100%)";
+                      setShowBarList((prev) => !prev);
+                    }}
+                    to="/movies/alloftype/now_playing"
+                    className="py-[6px] block"
+                  >
+                    <span className="mr-[18px] text-green-300">
+                      <FontAwesomeIcon icon={faCaretRight} />
+                    </span>
+                    Now Playing
+                  </Link>
+                  <Link
+                    onClick={() => {
+                      setShowBar(false);
+                      barELe.current.style.transform = "translateX(-100%)";
+                      setShowBarList((prev) => !prev);
+                    }}
+                    to="/movies/alloftype/top_rated"
+                    className="py-[6px] block"
+                  >
+                    <span className="mr-[18px] text-green-300">
+                      <FontAwesomeIcon icon={faCaretRight} />
+                    </span>
+                    Top Rated
+                  </Link>
+                  <Link
+                    onClick={() => {
+                      setShowBar(false);
+                      barELe.current.style.transform = "translateX(-100%)";
+                      setShowBarList((prev) => !prev);
+                    }}
+                    to="/movies/alloftype/upcoming"
+                    className="py-[6px] block"
+                  >
+                    <span className="mr-[18px] text-green-300">
+                      <FontAwesomeIcon icon={faCaretRight} />
+                    </span>
+                    Up Coming
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

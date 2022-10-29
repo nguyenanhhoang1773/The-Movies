@@ -39,7 +39,7 @@ function AllOfType() {
         break;
       case "now_playing":
         setTitle("Now Playing");
-        if (upComingMovies.length === 0) {
+        if (nowPlayingMovies.length === 0) {
           const fetchMovies = async () => {
             const result = await moviesOfType("now_playing");
             dispatch(UpComingSlice.actions.setUpComing(result));
@@ -47,12 +47,12 @@ function AllOfType() {
           };
           fetchMovies();
         } else {
-          setIsMovie(upComingMovies);
+          setIsMovie(nowPlayingMovies);
         }
         break;
       case "upcoming":
         setTitle("Up Coming");
-        if (nowPlayingMovies.length === 0) {
+        if (upComingMovies.length === 0) {
           const fetchMovies = async () => {
             const result = await moviesOfType("upcoming");
             dispatch(NowPlayingSlice.actions.setNowPlaying(result));
@@ -60,7 +60,7 @@ function AllOfType() {
           };
           fetchMovies();
         } else {
-          setIsMovie(nowPlayingMovies);
+          setIsMovie(upComingMovies);
         }
         break;
     }
@@ -69,7 +69,7 @@ function AllOfType() {
     <div>
       {isMovie.length > 0 && (
         <div>
-          <div className=" mb:pt-[20px]">
+          <div className="pt-[40px] mb:pt-[20px]">
             <div className="text-[24px] font-[600] ml-[10px] mb-[10px] text-white">
               <span className="text-[color:var(--primary)]">{title}</span>
             </div>
