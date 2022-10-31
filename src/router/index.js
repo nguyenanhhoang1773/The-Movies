@@ -6,7 +6,7 @@ import Search from "~/pages/Search";
 import Genres from "~/pages/Genres";
 import MiniContainer from "~/Layout/MiniContainer";
 import AllOfType from "~/pages/AllOfType";
-
+import MovieInfor from "~/pages/MovieInfo";
 const publicRoutes = [
   {
     path: routes.Home,
@@ -20,6 +20,10 @@ const publicRoutes = [
     path: routes.WatchMovie,
     Component: WatchMovie,
     Layout: MiniContainer,
+  },
+  {
+    path: routes.MovieInfor,
+    Component: MovieInfor,
   },
   {
     path: routes.Search,

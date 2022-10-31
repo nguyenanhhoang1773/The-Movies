@@ -33,11 +33,11 @@ function WatchMovie() {
 
   return (
     <Row gutter={[50]}>
-      <div className="flex mb:block mb:min-h-[900px] min-h-[1000px] mb:justify-center justify-between px-[40px] py-[60px] mb:py-0 mb:px-[30px]">
-        <Col span={16}>
+      <div className="flex mb:block mb:pb-[20px] mb:min-h-[900px] min-h-[1000px] mb:justify-center justify-between px-[40px] py-[60px] mb:py-0 mb:px-[30px]">
+        <Col ms={{ span: 24 }} ls={16}>
           <div className=" mt-[50px] mb:flex mb:justify-center mb:flex-col mb:mt-[30px] ">
             <div className="flex w-full justify-center">
-              <div className="relative w-full">
+              <div className="relative w-full mb:w-[unset]">
                 <iframe
                   ref={video}
                   title="Movie"
@@ -57,7 +57,7 @@ function WatchMovie() {
                 </h3>
                 <p
                   ref={overview}
-                  className="text-white mb:w-[300px] mb:h-[100px] mb:overflow-hidden  mt-6px"
+                  className="text-white mb:w-[300px] mb:h-[90px] mb:overflow-hidden  mt-6px"
                 >
                   <span className="text-[20px] font-[500] text-[color:var(--primary)] mr-[4px]">
                     Overview :
@@ -127,9 +127,9 @@ function WatchMovie() {
           </Col>
         )}
         {recomment.length > 0 && (
-          <Col span={8}>
+          <Col ms={{ span: 24 }} lg={8}>
             <div className="  mb:w-full mb:mt-[20px] mb:pl-0  ">
-              <h3 className="text-[color:var(--primary)] mb-[6px] mb:mb-0 mb:text-center text-[30px] font-[500]">
+              <h3 className="text-[color:var(--primary)] mb-[6px] mb:text-[24px] mb:mb-0 mb:text-center text-[30px] font-[500]">
                 Recommendations
               </h3>
               {!isMoblie && (

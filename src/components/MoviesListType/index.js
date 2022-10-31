@@ -2,7 +2,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import SliderPoster from "../Slider";
 import { Link } from "react-router-dom";
-function MoviesListType({ children, title, idElement, type }) {
+function MoviesListType({ children, title, idElement, type, noShowAll }) {
   return (
     <div
       id={idElement}
@@ -14,14 +14,16 @@ function MoviesListType({ children, title, idElement, type }) {
       <div className="flex  flex-wrap">
         <SliderPoster>{children}</SliderPoster>
       </div>
-      <div className="flex w-full mb:mt-[8px] mt-[16px] justify-center items-center">
-        <Link
-          to={`movies/alloftype/${type}`}
-          className="flex justify-center mb:py-[2px] mb:px-[4px] mb:text-[14px] hover:cursor-pointer hover:bg-green-300 rounded-full text-[20px] font-[500] text-white text-shadow items-center bg-[color:var(--primary)] px-[12px] py-[6px] "
-        >
-          Show All
-        </Link>
-      </div>
+      {!noShowAll && (
+        <div className="flex w-full mb:mt-[8px] mt-[16px] justify-center items-center">
+          <Link
+            to={`movies/alloftype/${type}`}
+            className="flex justify-center mb:py-[2px] mb:px-[4px] mb:text-[14px] hover:cursor-pointer hover:bg-green-300 rounded-full text-[20px] font-[500] text-white text-shadow items-center bg-[color:var(--primary)] px-[12px] py-[6px] "
+          >
+            Show All
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
