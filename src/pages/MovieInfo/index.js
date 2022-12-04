@@ -2,9 +2,9 @@ import { Row, Col } from "antd";
 import { useEffect, useState } from "react";
 import ButtonGenre from "~/components/ButtonGenre";
 import { Link, useParams } from "react-router-dom";
-import movieService from "~/apiServices/movieService";
-import castOfMovieService from "~/apiServices/castOfMovieService";
-import similarMovieService from "~/apiServices/similarMovieService";
+import { getDetail } from "~/apiServices/movieService";
+import { getCreadits } from "~/apiServices/movieService";
+import { getSimilarMovies } from "~/apiServices/movieService";
 import MoviePoster from "~/components/MoviePoster";
 import { useMediaQuery } from "react-responsive";
 import MoviesListType from "~/components/MoviesListType";
@@ -24,15 +24,15 @@ function MovieInfo() {
   } = movie;
   useEffect(() => {
     const fetchCast = async () => {
-      const casts = await castOfMovieService(idMovie);
+      const casts = await getCreadits(idMovie);
       setCast(casts);
     };
     const fetchMovieInfor = async () => {
-      const movie = await movieService(idMovie);
+      const movie = await getDetail(idMovie);
       setMovie(movie);
     };
     const fetchSemilarMovie = async () => {
-      const movie = await similarMovieService(idMovie);
+      const movie = await getSimilarMovies(idMovie);
       setSimilarMovie(movie);
     };
     fetchCast();

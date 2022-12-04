@@ -1,7 +1,7 @@
-import movieService from "~/apiServices/movieService";
+import { getDetail } from "~/apiServices/movieService";
 import { useEffect, useRef, useState } from "react";
 import RecommentMovie from "~/components/RecommentMovie";
-import recommentService from "~/apiServices/recommentService";
+import { getRecommentMovies } from "~/apiServices/movieService";
 import { useParams } from "react-router-dom";
 import Loading from "~/components/Loading";
 import ScrollBar from "~/components/ScrollBar";
@@ -20,11 +20,11 @@ function WatchMovie() {
   const overview = useRef();
   useEffect(() => {
     const fetchMovie = async () => {
-      const res = await movieService(idMovie);
+      const res = await getDetail(idMovie);
       setMovie(res);
     };
     const fetchRecomment = async () => {
-      const res = await recommentService(idMovie);
+      const res = await getRecommentMovies(idMovie);
       setRecomment(res);
     };
     fetchMovie();

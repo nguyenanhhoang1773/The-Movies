@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import MoviePoster from "~/components/MoviePoster";
-import searchService from "~/apiServices/searchService";
+import { searchMovie } from "~/apiServices/movieService";
 import { useParams } from "react-router-dom";
 
 function Search() {
@@ -9,7 +9,7 @@ function Search() {
   useEffect(() => {
     setIsMovie([]);
     const getMovies = async () => {
-      const result = await searchService(textSearch);
+      const result = await searchMovie(textSearch);
       setIsMovie(result);
     };
     getMovies();

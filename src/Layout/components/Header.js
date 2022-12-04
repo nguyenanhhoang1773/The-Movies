@@ -13,11 +13,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import ButtonType from "~/components/ButtonType";
-import searchService from "~/apiServices/searchService";
+import { searchMovie } from "~/apiServices/movieService";
 import { useEffect, useRef, useState } from "react";
 import SearchItem from "~/components/searchItem";
-import genreService from "~/apiServices/genresService";
-import popularService from "~/apiServices/popularService";
+import { getGenreList } from "~/apiServices/movieService";
+import { getPopularMovies } from "~/apiServices/movieService";
 import { useDispatch, useSelector } from "react-redux";
 import popularSlice from "~/redux/Slice/popularSlice";
 import {
@@ -81,7 +81,7 @@ function Header() {
   const handleSearchMovie = (e) => {
     if (e.target.value.trim()) {
       const searchResult = async () => {
-        const result = await searchService(e.target.value);
+        const result = await searchMovie(e.target.value);
         setListResultSearch(result);
       };
       searchResult();
@@ -102,12 +102,12 @@ function Header() {
   }, [location.pathname]);
   useEffect(() => {
     const genres = async () => {
-      const res = await genreService();
+      const res = await getGenreList();
       dispatch(genreSlice.actions.setGenres(res));
       dispatch(genreSlice.actions.setLoading());
     };
     const popular = async () => {
-      const res = await popularService();
+      const res = await getPopularMovies();
       dispatch(popularSlice.actions.setPopular(res));
     };
     genres();

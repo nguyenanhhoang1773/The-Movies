@@ -3,7 +3,7 @@ import MoviePoster from "~/components/MoviePoster";
 import { useParams } from "react-router-dom";
 import { genreSelector, genreMOviesSelector } from "~/redux/Selector";
 import { useDispatch, useSelector } from "react-redux";
-import genreMovieService from "~/apiServices/genreMovieService";
+import { getMovieWithGenre } from "~/apiServices/movieService";
 import ShowMore from "~/components/ShowMore";
 import genreMoviesSlice from "~/redux/Slice/genreMoviesSlice";
 import { findIdGenre } from "~/hooks";
@@ -21,7 +21,7 @@ function Genres() {
     if (genresSelector.genres.length > 0) {
       genreId.current = findIdGenre(nameGenre, genresSelector);
       const fetchMovies = async () => {
-        const res = await genreMovieService(genreId.current);
+        const res = await getMovieWithGenre(genreId.current);
         dispatch(genreMoviesSlice.actions.setGenreMovies(res));
         setLoading(true);
       };

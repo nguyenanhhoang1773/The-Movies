@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MoviesListType from "~/components/MoviesListType";
 import MoviePoster from "~/components/MoviePoster";
 import SliderPoster from "~/components/Slider";
-import genresService from "~/apiServices/genresService";
+import { getGenreList } from "~/apiServices/movieService";
 import ButtonGenre from "~/components/ButtonGenre";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +15,7 @@ import NowPlayingSlice from "~/redux/Slice/nowPlayingSlice";
 import TopRatedSilce from "~/redux/Slice/TopRatedSLice";
 import UpComingSlice from "~/redux/Slice/UpComingSlice";
 import Loading from "~/components/Loading";
-import moviesOfType from "~/apiServices/moviesOfType";
+import { getTypeMovie } from "~/apiServices/movieService";
 
 function Home() {
   const dispatch = useDispatch();
@@ -31,8 +31,8 @@ function Home() {
       nowPlayingMovies.length === 0
     ) {
       const fetchNowPlayingMovies = async () => {
-        const result = await moviesOfType("now_playing");
-        const genresApi = await genresService();
+        const result = await getTypeMovie("now_playing");
+        const genresApi = await getGenreList();
         result.forEach((obj) => {
           const genres = [];
           obj.genre_ids.forEach((idGenre) => {
@@ -46,11 +46,11 @@ function Home() {
         dispatch(NowPlayingSlice.actions.setNowPlaying(result));
       };
       const fetchTopRatedMovie = async () => {
-        const result = await moviesOfType("top_rated");
+        const result = await getTypeMovie("top_rated");
         dispatch(TopRatedSilce.actions.setTopRated(result));
       };
       const fetchUpComingMovie = async () => {
-        const result = await moviesOfType("upcoming");
+        const result = await getTypeMovie("upcoming");
         dispatch(UpComingSlice.actions.setUpComing(result));
       };
 

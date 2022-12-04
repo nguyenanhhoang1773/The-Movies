@@ -5,7 +5,7 @@ import NowPlayingSlice from "~/redux/Slice/nowPlayingSlice";
 import TopRatedSilce from "~/redux/Slice/TopRatedSLice";
 import UpComingSlice from "~/redux/Slice/UpComingSlice";
 import { useSelector, useDispatch } from "react-redux";
-import moviesOfType from "~/apiServices/moviesOfType";
+import { getTypeMovie } from "~/apiServices/movieService";
 import {
   nowPlayingSelector,
   topRatedSelector,
@@ -28,7 +28,7 @@ function AllOfType() {
         setTitle("Top Rated");
         if (topRatedMovies.length === 0) {
           const fetchMovies = async () => {
-            const result = await moviesOfType("top_rated");
+            const result = await getTypeMovie("top_rated");
             dispatch(TopRatedSilce.actions.setTopRated(result));
             setIsMovie(result);
           };
@@ -41,7 +41,7 @@ function AllOfType() {
         setTitle("Now Playing");
         if (nowPlayingMovies.length === 0) {
           const fetchMovies = async () => {
-            const result = await moviesOfType("now_playing");
+            const result = await getTypeMovie("now_playing");
             dispatch(UpComingSlice.actions.setUpComing(result));
             setIsMovie(result);
           };
@@ -54,7 +54,7 @@ function AllOfType() {
         setTitle("Up Coming");
         if (upComingMovies.length === 0) {
           const fetchMovies = async () => {
-            const result = await moviesOfType("upcoming");
+            const result = await getTypeMovie("upcoming");
             dispatch(NowPlayingSlice.actions.setNowPlaying(result));
             setIsMovie(result);
           };

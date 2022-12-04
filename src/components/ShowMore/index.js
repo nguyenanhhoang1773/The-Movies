@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import genreMoviesSlice from "~/redux/Slice/genreMoviesSlice";
-import genreMovieService from "~/apiServices/genreMovieService";
+import { getMovieWithGenre } from "~/apiServices/movieService";
 import { useRef } from "react";
 
 function ShowMore({ genreId }) {
@@ -8,7 +8,7 @@ function ShowMore({ genreId }) {
   const page = useRef(2);
   const handleShowMore = () => {
     const fetchMovies = async () => {
-      const res = await genreMovieService(genreId, page.current);
+      const res = await getMovieWithGenre(genreId, page.current);
       dispatch(genreMoviesSlice.actions.addGenreMovies(res));
     };
     fetchMovies();
