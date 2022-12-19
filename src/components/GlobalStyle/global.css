@@ -33,7 +33,7 @@ svg {
 .scroll-bar::-webkit-scrollbar {
   display: none;
 }
-
+/* 
 *::-webkit-scrollbar {
   display: none;
-}
+} */

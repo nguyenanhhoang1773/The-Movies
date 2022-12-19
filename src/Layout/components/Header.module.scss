@@ -1,0 +1,16 @@
+.avatar {
+    div::before {
+        content: "";
+        position: absolute;
+        top:-14px;
+        right: 0;
+        width: 160px;
+        height: 16px;
+        display: block;
+        background: transparent;
+    }
+}
+.avatar:hover  div{
+        display: block !important;
+
+}

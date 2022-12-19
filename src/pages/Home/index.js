@@ -23,6 +23,13 @@ function Home() {
   const topRatedMovies = useSelector(topRatedSelector);
   const upComingMovies = useSelector(upComingSelector);
   const nowPlayingMovies = useSelector(nowPlayingSelector);
+  useEffect(() => {
+    // const data0 = indexedDB.open("firebaseLocalStorageDbv").result;
+    // console.log(data0);
+    const data = window.localStorage.getItem(
+      "firebase:authUser:AIzaSyBobnPb-5U9zkzq4g0kCOLPs5CQTfxTeXI:[DEFAULT]"
+    );
+  }, []);
 
   useEffect(() => {
     if (

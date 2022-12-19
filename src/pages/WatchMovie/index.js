@@ -1,14 +1,35 @@
-import { getDetail } from "~/apiServices/movieService";
 import { useEffect, useRef, useState } from "react";
-import RecommentMovie from "~/components/RecommentMovie";
-import { getRecommentMovies } from "~/apiServices/movieService";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useMediaQuery } from "react-responsive";
+import { Row, Col } from "antd";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  onSnapshot,
+  doc,
+  orderBy,
+  limit,
+  startAfter,
+} from "firebase/firestore";
+
+import { userInforSelector } from "~/redux/Selector";
+import { getDetail } from "~/apiServices/movieService";
 import Loading from "~/components/Loading";
 import ScrollBar from "~/components/ScrollBar";
-import { useMediaQuery } from "react-responsive";
+import RecommentMovie from "~/components/RecommentMovie";
+import { getRecommentMovies } from "~/apiServices/movieService";
 import MoviePoster from "~/components/MoviePoster";
-import { Row, Col } from "antd";
+import Comment from "~/components/Comment/Comment";
+import { db } from "~/firebase/config";
+import classNames from "classnames/bind";
+import style from "./watchMoive.module.scss";
+import { convertTimeStamp } from "~/hooks";
+const cx = classNames.bind(style);
 function WatchMovie() {
+  const userInfor = useSelector(userInforSelector);
   const isMoblie = useMediaQuery({ minWidth: 326, maxWidth: 600 });
   const scrollBarEle = useRef();
   const [recommentMovie, setRecommentMovie] = useState(3);
@@ -17,7 +38,42 @@ function WatchMovie() {
   const [movie, setMovie] = useState({});
   let { idMovie } = useParams();
   const [recomment, setRecomment] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [lastVisible, setlastVisible] = useState("");
+  const wrapperRef = useRef();
+  const testRef = useRef();
   const overview = useRef();
+  useEffect(() => {
+    const getMess = async () => {
+      const q = query(
+        collection(db, "message"),
+        where("room", "==", idMovie),
+        orderBy("timestamp", "desc"),
+        limit(5)
+      );
+      let data = [];
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        data.push(doc.data());
+      });
+      const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+      setlastVisible(lastVisible);
+      setMessages(data);
+    };
+    getMess();
+    const q = query(collection(db, "message"), where("room", "==", idMovie));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+          console.log(change.doc.data());
+          setMessages((mess) => {
+            return [change.doc.data(), ...mess];
+          });
+        }
+      });
+    });
+    return () => unsubscribe();
+  }, [idMovie]);
   useEffect(() => {
     const fetchMovie = async () => {
       const res = await getDetail(idMovie);
@@ -31,8 +87,39 @@ function WatchMovie() {
     fetchRecomment();
   }, [idMovie]);
 
+  const handleScrollCommment = (e) => {
+    if (e.target.scrollTop + e.target.clientHeight === e.target.scrollHeight) {
+      const getMess = async () => {
+        try {
+          const q = query(
+            collection(db, "message"),
+            where("room", "==", idMovie),
+            orderBy("timestamp", "desc"),
+            startAfter(lastVisible),
+            limit(4)
+          );
+          let data = [];
+          const querySnapshot = await getDocs(q);
+          const lastVisibleSecond =
+            querySnapshot.docs[querySnapshot.docs.length - 1];
+          querySnapshot.forEach((doc) => {
+            data.push(doc.data());
+          });
+          setMessages((prev) => {
+            return [...prev, ...data];
+          });
+          setlastVisible(lastVisibleSecond);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      getMess();
+    }
+  };
   return (
     <Row gutter={[50]}>
+      <div ref={testRef}></div>
       <div className="flex mb:block mb:pb-[20px] mb:min-h-[900px] min-h-[1000px] mb:justify-center justify-between px-[40px] py-[60px] mb:py-0 mb:px-[30px]">
         <Col ms={{ span: 24 }} ls={16}>
           <div className=" mt-[50px] mb:flex mb:justify-center mb:flex-col mb:mt-[30px] ">
@@ -64,6 +151,40 @@ function WatchMovie() {
                   </span>
                   {movie.overview}
                 </p>
+                <div
+                  ref={wrapperRef}
+                  onScroll={handleScrollCommment}
+                  className={`${cx(
+                    "wrapper-comments"
+                  )} overflow-auto h-[400px] mt-[20px] p-[20px] bg-slate-800 rounded-lg`}
+                >
+                  {/* {userInfor.email && ( */}
+                  <Comment
+                    write
+                    email={userInfor.email}
+                    room={idMovie}
+                    name={userInfor.displayName}
+                    photoUrl={userInfor.photoURL}
+                  />
+                  {/* )} */}
+                  {messages.map(
+                    (
+                      { name, photoURL, room, text, timestamp, email },
+                      index
+                    ) => (
+                      <Comment
+                        room={room}
+                        name={name}
+                        email={email}
+                        message={text}
+                        photoUrl={photoURL}
+                        timestamp={timestamp}
+                        key={index}
+                      />
+                    )
+                  )}
+                </div>
+
                 {isOverview && (
                   <span className="hidden mb:inline w-[300px] text-white">
                     ...
@@ -120,7 +241,7 @@ function WatchMovie() {
               </h3>
               <ScrollBar
                 classNameWrapper=" bg-[rgba(0,0,0,0.3)] py-[10px] rounded-[4px] pl-[10px] overflow-hidden"
-                classNameScrollEle="h-[700px]"
+                classNameScrollEle="h-[900px]"
                 height={160}
               ></ScrollBar>
             </div>

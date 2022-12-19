@@ -9,7 +9,11 @@ import { db, auth } from "~/firebase/config";
 
 const uiConfig = {
   signInFlow: "popup",
-  signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
+  signInOptions: [
+    firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+  ],
 };
 function ModalLogIn() {
   const isSingIn = useSelector(signInSelector);

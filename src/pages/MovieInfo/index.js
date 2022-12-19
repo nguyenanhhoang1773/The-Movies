@@ -41,7 +41,7 @@ function MovieInfo() {
   }, [idMovie]);
   return (
     <div className="pb-[60px]">
-      {cast.length > 0 && similarMovie.length > 0 && backDropPath && (
+      {cast.length > 0 && similarMovie.length > 0 && (
         <div>
           {!isMoblie && (
             <div className="relative mb:w-full mb:pb-[60%] w-[90%] m-auto flex justify-center mt-[20px] h-0 pb-[45%] ">

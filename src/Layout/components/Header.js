@@ -30,13 +30,16 @@ import genreSlice from "~/redux/Slice/genreSlice";
 import logInSlice from "~/redux/Slice/logInSlice";
 import fireBaseSlice from "~/redux/Slice/fireBaseSlice";
 import ModalLogIn from "~/components/Modal";
-// import { db } from "~/firebase/config";
+import { db } from "~/firebase/config";
 import firebase from "firebase/compat/app";
-// import { getAuth, signInWithCustomToken } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
+import style from "./Header.module.scss";
+import classNames from "classnames/bind";
+const cx = classNames.bind(style);
 function Header() {
-  // const [user, setUser] = useState("");
   const logIn = useSelector(logInSelector);
   const isSingIn = useSelector(signInSelector);
+  const [showModal, setShowModal] = useState(false);
   const userInfor = useSelector(userInforSelector);
   const genresSelector = useSelector(genreSelector);
   const dispatch = useDispatch();
@@ -44,7 +47,6 @@ function Header() {
   const location = useLocation();
   const inputEle = useRef();
   const [isNav, setNav] = useState(false);
-  // const [isShowHead, setShowHeader] = useState(false);
   const [listResultSearch, setListResultSearch] = useState([]);
   const [isListSearch, setIsListSearch] = useState(false);
   const [showGenreMb, setShowGenreMb] = useState(false);
@@ -89,12 +91,45 @@ function Header() {
       setListResultSearch([]);
     }
   };
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      dispatch(fireBaseSlice.actions.setSignIn(!!user));
-      dispatch(fireBaseSlice.actions.setUserInfor(user._delegate));
+  const handleLogOut = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  };
+  useEffect(() => {
+    const localData = localStorage.getItem("user");
+    if (localData) {
+      let { displayName, email, photoURL } = JSON.parse(localData);
+      dispatch(
+        fireBaseSlice.actions.setUserInfor({ displayName, email, photoURL })
+      );
     }
-  });
+  }, []);
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user && !userInfor.photoURL) {
+        setShowModal(false);
+        const { displayName, email, photoURL } = user._delegate;
+        localStorage.setItem(
+          "user",
+          `{"displayName": "${displayName}", "email": "${email}", "photoURL": "${photoURL}"}`
+        );
+        // dispatch(fireBaseSlice.actions.setSignIn(!!user));
+        dispatch(
+          fireBaseSlice.actions.setUserInfor({ displayName, email, photoURL })
+        );
+      } else if (!user) {
+        localStorage.removeItem("user");
+        dispatch(fireBaseSlice.actions.setUserInfor({}));
+      }
+    });
+  }, []);
   useEffect(() => {
     if (location.pathname !== "/") {
       setNav(true);
@@ -120,32 +155,10 @@ function Header() {
       typeMovies.current.style.top = 60 + "px";
     }
   }, [showGenreMb]);
-  useEffect(() => {
-    // db.collection("rooms").add({
-    //   displayName: "abc",
-    //   mesagge: [{ id: 1, name: "hoang" }],
-    // });
-    // db.collection("rooms").onSnapshot((snapshot) => {
-    //   const data = snapshot.docs.map((doc) => ({
-    //     ...doc.data(),
-    //     id: doc.id,
-    //   }));
-    // });
-    // const unregisterAuthObserver = firebase
-    //   .auth()
-    //   .onAuthStateChanged((user) => {
-    //     console.log(user);
-    //     if (user) {
-    //       dispatch(fireBaseSlice.actions.setSignIn(!!user));
-    //       dispatch(fireBaseSlice.actions.setUserInfor(user._delegate));
-    //     }
-    //   });
-    // return () => unregisterAuthObserver();
-  }, []);
   return (
     <div className="bg-neutral-900 fixed top-0 w-full z-20 h-14">
       <div className="fixed flex z-10 justify-center items-center h-14 top-0 w-full ">
-        {logIn && !isSingIn && <ModalLogIn />}
+        {showModal && <ModalLogIn />}
         <div className="flex mb:w-full mb:pl-[10px] items-center h-full w-11/12 justify-between">
           <div className="flex ">
             <Link to={routes.Home} className="flex items-center justify-center">
@@ -270,19 +283,29 @@ function Header() {
             <Button className="mr-2 ">
               <FontAwesomeIcon className="text-2xl mt-1" icon={faBell} />
             </Button>
-            {!isSingIn && (
+            {!userInfor.photoURL && (
               <button
-                // onClick={() => dispatch(logInSlice.actions.setLogIn())}
+                onClick={() => setShowModal(true)}
                 className="h-8 flex hover:text-black items-center w-[120px] justify-center rounded-md px-3 transition-all text-white  font-semibold hover:bg-green-300   py-2 bg-green-500"
               >
                 Đăng nhập
               </button>
             )}
-            {isSingIn && (
-              <img
-                src={userInfor.photoURL}
-                className="w-[30px] h-[30px] rounded-full cursor-pointer"
-              />
+            {userInfor.photoURL && (
+              <div className={`${cx("avatar")} relative flex`}>
+                <img
+                  src={userInfor.photoURL}
+                  className={`w-[30px] h-[30px] rounded-full cursor-pointer`}
+                />
+                <div className="absolute hidden top-[36px] right-[-10px] ">
+                  <button
+                    className=" bg-green-400 hover:bg-green-500  w-[180px] ml-[8px] text-[18px] text-white text-shadow p-[4px] rounded-md"
+                    onClick={handleLogOut}
+                  >
+                    Log out
+                  </button>
+                </div>
+              </div>
             )}
           </div>
           <div className="hidden mb:block ">
