@@ -1,5 +1,5 @@
 import { Row, Col } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ButtonGenre from "~/components/ButtonGenre";
 import { Link, useParams } from "react-router-dom";
 import { getDetail } from "~/apiServices/movieService";
@@ -15,6 +15,7 @@ function MovieInfo() {
   const [movie, setMovie] = useState({});
   const [cast, setCast] = useState([]);
   const [similarMovie, setSimilarMovie] = useState([]);
+  const [borderColor, setBorderColor] = useState(false);
   const {
     backdrop_path: backDropPath,
     poster_path: PosterPath,
@@ -22,6 +23,13 @@ function MovieInfo() {
     genres = [],
     overview,
   } = movie;
+  const wrapperPosterRef = useRef();
+  useEffect(() => {
+    if (borderColor) {
+      wrapperPosterRef.current.style.borderWidth = "2px";
+      wrapperPosterRef.current.style.borderColor = "rgba(38, 194, 129, 1)";
+    }
+  }, [borderColor]);
   useEffect(() => {
     const fetchCast = async () => {
       const casts = await getCreadits(idMovie);
@@ -53,16 +61,22 @@ function MovieInfo() {
               <div className="absolute right-0 bottom-[5%] left-[5%] z-20">
                 <Row gutter={[48]}>
                   <Col span={5} className="flex justify-end ">
-                    <div className="flex max-h-[440px] border-[2px] brightness-110 border-green-300 rounded-2xl">
-                      <img
-                        className="w-[280px] h-auto    rounded-xl "
-                        src={
-                          PosterPath
-                            ? `https://image.tmdb.org/t/p/w500//${PosterPath}`
-                            : `https://i.pinimg.com/550x/77/ba/ec/77baecdea3e0a230b1470b4d4d4440a4.jpg`
-                        }
-                      />
-                    </div>
+                    {PosterPath && (
+                      <div
+                        ref={wrapperPosterRef}
+                        className="flex max-h-[440px]  brightness-110  rounded-2xl"
+                      >
+                        <img
+                          onLoad={() => setBorderColor(true)}
+                          className="w-[280px] h-auto rounded-xl "
+                          src={
+                            PosterPath
+                              ? `https://image.tmdb.org/t/p/w500//${PosterPath}`
+                              : `https://i.pinimg.com/550x/77/ba/ec/77baecdea3e0a230b1470b4d4d4440a4.jpg`
+                          }
+                        />
+                      </div>
+                    )}
                   </Col>
                   <Col className="flex " span={16}>
                     <div className=" flex flex-col ">
@@ -80,7 +94,7 @@ function MovieInfo() {
                           );
                         })}
                       </div>
-                      <div className="text-white text-shadow text-[20px] mt-[20px]">
+                      <div className="max-h-[180px] overflow-auto text-white text-shadow text-[20px] mt-[20px]">
                         <span className="text-[color:var(--primary)] mr-[6px] text-[24px] font-[500]">
                           Overview:
                         </span>
@@ -103,7 +117,7 @@ function MovieInfo() {
               </div>
             </div>
           )}
-          {isMoblie && (
+          {isMoblie && movie.title && (
             <div className=" relative mt-[10px]">
               <img
                 className="blur-[2px]"
@@ -153,43 +167,45 @@ function MovieInfo() {
             </div>
           )}
 
-          <div className="flex flex-col mb:py-[10px]  items-center mt-[20px] py-[50px]">
-            <div>
-              <h3 className="flex justify-center mb:text-[24px] mb:mb-0 mb-[12px] text-[28px] text-green-300 font-[600]">
-                CASTS
-              </h3>
-              <div className="flex mb:flex-wrap">
-                {cast.map(({ name, profile_path: profilePath }, index) => {
-                  const num = isMoblie ? 4 : 6;
-                  if (index < num) {
-                    return (
-                      <div
-                        key={index}
-                        className="px-[12px] mb:mt-[20px] mb:w-[50%]"
-                      >
-                        <div className="flex ">
-                          <span className="max-w-[168px] max-h-[30px] overflow-hidden  mb:h-[30px] mb:overflow-hidden mb-[10px] text-[20px] font-[500] text-[color:var(--primary)] text-shadow ">
-                            {name}
-                          </span>
+          {cast.length > 0 && (
+            <div className="flex flex-col mb:py-[10px]  items-center mt-[20px] py-[50px]">
+              <div>
+                <h3 className="flex justify-center mb:text-[24px] mb:mb-0 mb-[12px] text-[28px] text-green-300 font-[600]">
+                  CASTS
+                </h3>
+                <div className="flex mb:flex-wrap">
+                  {cast.map(({ name, profile_path: profilePath }, index) => {
+                    const num = isMoblie ? 4 : 6;
+                    if (index < num) {
+                      return (
+                        <div
+                          key={index}
+                          className="px-[12px] mb:mt-[20px] mb:w-[50%]"
+                        >
+                          <div className="flex ">
+                            <span className="max-w-[168px] max-h-[30px] overflow-hidden  mb:h-[30px] mb:overflow-hidden mb-[10px] text-[20px] font-[500] text-[color:var(--primary)] text-shadow ">
+                              {name}
+                            </span>
+                          </div>
+                          <div className="border w-[170px]  border-green-300 rounded-xl">
+                            <img
+                              alt="https://image.tmdb.org/t/p/w200///z82y3Nxm7VZjfaMPMdUtbyoAyls.jpg"
+                              className="rounded-xl max-h-[254px] w-[170px]"
+                              src={
+                                profilePath
+                                  ? `https://image.tmdb.org/t/p/w200//${profilePath}`
+                                  : "https://w0.peakpx.com/wallpaper/27/386/HD-wallpaper-naruto-anime-error-skyline-thumbnail.jpg"
+                              }
+                            />
+                          </div>
                         </div>
-                        <div className="border w-[170px]  border-green-300 rounded-xl">
-                          <img
-                            alt="https://image.tmdb.org/t/p/w200///z82y3Nxm7VZjfaMPMdUtbyoAyls.jpg"
-                            className="rounded-xl max-h-[254px] w-[170px]"
-                            src={
-                              profilePath
-                                ? `https://image.tmdb.org/t/p/w200//${profilePath}`
-                                : "https://w0.peakpx.com/wallpaper/27/386/HD-wallpaper-naruto-anime-error-skyline-thumbnail.jpg"
-                            }
-                          />
-                        </div>
-                      </div>
-                    );
-                  }
-                })}
+                      );
+                    }
+                  })}
+                </div>
               </div>
             </div>
-          </div>
+          )}
           <h3 className="flex justify-center mb:mb-[0px] mt-[20px] mb-[-20px] text-green-300 text-shadow font-[600] text-[32px] mb:text-[24px] ">
             Similar Movies
           </h3>

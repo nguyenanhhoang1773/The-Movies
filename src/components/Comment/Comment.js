@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import style from "./Comment.module.scss";
 import classNames from "classnames/bind";
 import { useEffect, useRef, useState } from "react";
@@ -11,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { userInforSelector } from "~/redux/Selector";
 import { useSelector } from "react-redux";
+import { useMediaQuery } from "react-responsive";
 
 import { db } from "~/firebase/config";
 import { convertTimeStamp } from "~/hooks";
@@ -25,7 +27,7 @@ function Comment({
   email,
   timestamp,
 }) {
-  console.log(photoUrl);
+  const isMoblie = useMediaQuery({ minWidth: 326, maxWidth: 600 });
   const userInfor = useSelector(userInforSelector);
   const isMyAccount = userInfor.email === email;
   const inputRef = useRef();
@@ -40,6 +42,10 @@ function Comment({
   const handleSendMessage = async () => {
     const inputEle = inputRef.current;
     const text = inputEle.value;
+    if (!text.trim()) {
+      alert("Tin nhắn không được bỏ trống!");
+      return;
+    }
     inputEle.value = "";
     inputEle.focus();
 
@@ -65,38 +71,51 @@ function Comment({
       <img
         className={` ${
           write ? "ml-[20px]  w-[42px] h-[42px]" : " w-[36px] h-[36px]"
-        } ${isMyAccount ? "ml-[14px] " : "mr-[14px]"} rounded-full`}
+        } ${isMyAccount ? "ml-[14px] " : "mr-[14px]"} rounded-full ${
+          isMoblie ? "w-[28px] h-[28px] " : ""
+        }`}
         src={photoUrl}
       />
       <div
-        className={` flex ${write ? "flex-row-reverse" : "w-[60%]"} ${
+        className={` flex ${write || isMoblie ? "flex-row-reverse " : ""} ${
           write ? "flex-1" : ""
         } px-[16px] py-[6px] items-center    rounded-2xl bg-slate-600`}
       >
         <div className="flex-1">
           <div
             className={`flex ${
-              write ? "justify-end " : "justify-between"
+              write && !isMoblie ? "justify-end " : "justify-between"
             } items-center`}
           >
+            {write && isMoblie && (
+              <button
+                onClick={handleSendMessage}
+                className={`${
+                  isMoblie
+                    ? "px-[8px] py-[4px] text-[10px] "
+                    : "px-[12px] py-[4px] text-[20px] "
+                }  hover:bg-green-500 bg-[color:var(--primary)] text-white text-shadow rounded-full mr-[14px] font-semibold `}
+              >
+                Send
+              </button>
+            )}
             {!isMyAccount && (
               <h3
-                className={`  text-[20px] font-medium text-[color:var(--primary)]`}
+                className={`${
+                  isMoblie ? "text-[12px] " : "text-[20px] "
+                } text-[color:var(--primary)] font-medium  `}
               >
                 {name}
               </h3>
             )}
             {write && (
               <h3
-                className={`  text-[20px] font-medium text-[color:var(--primary)]`}
+                className={`${
+                  isMoblie ? "text-[12px] " : "text-[20px] "
+                }   font-medium text-[color:var(--primary)]`}
               >
                 {name}
               </h3>
-            )}
-            {time && (
-              <span className="inline ml-[] text-[16px] text-[rgba(0,0,0,0.6) text-shadow]">
-                {time}
-              </span>
             )}
           </div>
 
@@ -112,17 +131,31 @@ function Comment({
                   }
                 }}
                 ref={inputRef}
-                className="py-[4px] pl-[6px] w-full bg-slate-800 text-white text-shadow mt-[6px] rounded-md"
+                className={`${
+                  isMoblie ? "text-[12px]" : ""
+                } py-[4px] pl-[6px] w-full bg-slate-800 text-white text-shadow mt-[6px] rounded-md`}
                 type="text"
               />
             </div>
           )}
-          {!write && <p className="text-[14px] text-slate-300">{message}</p>}
+          {!write && <p className="text-[16px] text-slate-300">{message}</p>}
+          {time && (
+            <span
+              className={`${
+                isMoblie ? "text-[10px]" : "text-[12px]"
+              } inline text-slate-400 text-shadow`}
+            >
+              {time}
+            </span>
+          )}
         </div>
-        {write && (
+
+        {write && !isMoblie && (
           <button
             onClick={handleSendMessage}
-            className="px-[12px] py-[4px] hover:bg-green-500 bg-[color:var(--primary)] text-white text-shadow text-[20px] rounded-full mr-[14px] font-semibold "
+            className={`
+                 px-[12px] py-[4px] text-[20px] 
+             hover:bg-green-500 bg-[color:var(--primary)] text-white text-shadow rounded-full mr-[14px] font-semibold `}
           >
             Send
           </button>

@@ -9,11 +9,12 @@ module.exports = {
       mb: { min: "326px", max: "480px" },
       // => @media (min-width: 640px) { ... }
 
-      laptop: "1024px",
+      tab: { min: "480px", max: "1023px" },
+      // => @media (min-width: 1280px) { ... }
+      lg: { min: "1024px", max: "1280px" },
       // => @media (min-width: 1024px) { ... }
 
-      desktop: "1280px",
-      // => @media (min-width: 1280px) { ... }
+      xl: "1280px",
     },
   },
   plugins: [],

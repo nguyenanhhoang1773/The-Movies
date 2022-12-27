@@ -114,6 +114,7 @@ function Header() {
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user && !userInfor.photoURL) {
+        console.log("log in!");
         setShowModal(false);
         const { displayName, email, photoURL } = user._delegate;
         localStorage.setItem(

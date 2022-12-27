@@ -24,8 +24,6 @@ function Home() {
   const upComingMovies = useSelector(upComingSelector);
   const nowPlayingMovies = useSelector(nowPlayingSelector);
   useEffect(() => {
-    // const data0 = indexedDB.open("firebaseLocalStorageDbv").result;
-    // console.log(data0);
     const data = window.localStorage.getItem(
       "firebase:authUser:AIzaSyBobnPb-5U9zkzq4g0kCOLPs5CQTfxTeXI:[DEFAULT]"
     );
@@ -102,7 +100,7 @@ function Home() {
                         />
                       </Link>
                       <div className="absolute mb:mb-[20px] mb:ml-[20px] ml-[100px] mb-[180px] bottom-0">
-                        <h3 className="text-[30px] mb-[20px] mb:mb-[10px] mb:text-[24px] font-[600] text-white text-shadow ">
+                        <h3 className="text-[40px] mb-[20px] mb:mb-[10px] mb:text-[24px] font-[600] text-white text-shadow ">
                           {title}
                         </h3>
                         <div>

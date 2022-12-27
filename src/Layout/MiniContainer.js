@@ -19,7 +19,9 @@ function MiniContainer({ children }) {
       <Header />
       <div ref={wrapper} className={`mt-14 bg-slate-900`}>
         <ScrollBar heightContent={resize} height={200}>
-          <div className="mb:m-0 ml-[160px] mr-[160px]">{children}</div>
+          <div className="mb:m-0 tab:ml-[40px]  tab:mr-[40px] lg:ml-[60px] lg:mr-[60px] xl:ml-[160px] xl:mr-[160px]">
+            {children}
+          </div>
         </ScrollBar>
       </div>
     </div>

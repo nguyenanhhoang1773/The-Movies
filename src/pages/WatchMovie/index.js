@@ -14,6 +14,7 @@ import {
   limit,
   startAfter,
 } from "firebase/firestore";
+import { faChevronUp, faCircleUp } from "@fortawesome/free-solid-svg-icons";
 
 import { userInforSelector } from "~/redux/Selector";
 import { getDetail } from "~/apiServices/movieService";
@@ -27,22 +28,31 @@ import { db } from "~/firebase/config";
 import classNames from "classnames/bind";
 import style from "./watchMoive.module.scss";
 import { convertTimeStamp } from "~/hooks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const cx = classNames.bind(style);
 function WatchMovie() {
+  let { idMovie } = useParams();
   const userInfor = useSelector(userInforSelector);
   const isMoblie = useMediaQuery({ minWidth: 326, maxWidth: 600 });
-  const scrollBarEle = useRef();
   const [recommentMovie, setRecommentMovie] = useState(3);
   const [isOverview, setOverview] = useState(true);
-  const video = useRef();
   const [movie, setMovie] = useState({});
-  let { idMovie } = useParams();
   const [recomment, setRecomment] = useState([]);
   const [messages, setMessages] = useState([]);
   const [lastVisible, setlastVisible] = useState("");
+  const [showMessages, setShowMessages] = useState(false);
+  const scrollBarEle = useRef();
+  const video = useRef();
   const wrapperRef = useRef();
   const testRef = useRef();
   const overview = useRef();
+  useEffect(() => {
+    if (!isMoblie) {
+      setShowMessages(true);
+    } else {
+      setShowMessages(false);
+    }
+  }, [isMoblie]);
   useEffect(() => {
     const getMess = async () => {
       const q = query(
@@ -151,40 +161,6 @@ function WatchMovie() {
                   </span>
                   {movie.overview}
                 </p>
-                <div
-                  ref={wrapperRef}
-                  onScroll={handleScrollCommment}
-                  className={`${cx(
-                    "wrapper-comments"
-                  )} overflow-auto h-[400px] mt-[20px] p-[20px] bg-slate-800 rounded-lg`}
-                >
-                  {/* {userInfor.email && ( */}
-                  <Comment
-                    write
-                    email={userInfor.email}
-                    room={idMovie}
-                    name={userInfor.displayName}
-                    photoUrl={userInfor.photoURL}
-                  />
-                  {/* )} */}
-                  {messages.map(
-                    (
-                      { name, photoURL, room, text, timestamp, email },
-                      index
-                    ) => (
-                      <Comment
-                        room={room}
-                        name={name}
-                        email={email}
-                        message={text}
-                        photoUrl={photoURL}
-                        timestamp={timestamp}
-                        key={index}
-                      />
-                    )
-                  )}
-                </div>
-
                 {isOverview && (
                   <span className="hidden mb:inline w-[300px] text-white">
                     ...
@@ -198,6 +174,58 @@ function WatchMovie() {
                       Read more
                     </span>
                   </span>
+                )}
+                {isMoblie && !showMessages && (
+                  <button
+                    onClick={() => {
+                      setShowMessages(true);
+                    }}
+                    className="text-[20px] mt-[20px] text-white text-shadow border border-[color:var(--primary)] px-[28px] py-[8px] rounded-full"
+                  >
+                    Comment
+                  </button>
+                )}
+                {showMessages && (
+                  <div className="relative mb-[24px]">
+                    {isMoblie && (
+                      <FontAwesomeIcon
+                        onClick={() => setShowMessages(false)}
+                        className="absolute bottom-[-44px]  text-[color:var(--primary)] text-[34px] p-[6px] right-[50%] left-[50%] translate-x-[-50%]"
+                        icon={faChevronUp}
+                      />
+                    )}
+                    <div
+                      ref={wrapperRef}
+                      onScroll={handleScrollCommment}
+                      className={`${cx(
+                        "wrapper-comments"
+                      )} overflow-auto max-h-[400px]  mt-[20px] p-[20px] bg-slate-800 rounded-lg`}
+                    >
+                      <Comment
+                        write
+                        email={userInfor.email}
+                        room={idMovie}
+                        name={userInfor.displayName}
+                        photoUrl={userInfor.photoURL}
+                      />
+                      {messages.map(
+                        (
+                          { name, photoURL, room, text, timestamp, email },
+                          index
+                        ) => (
+                          <Comment
+                            room={room}
+                            name={name}
+                            email={email}
+                            message={text}
+                            photoUrl={photoURL}
+                            timestamp={timestamp}
+                            key={index}
+                          />
+                        )
+                      )}
+                    </div>
+                  </div>
                 )}
               </div>
             )}
@@ -235,7 +263,7 @@ function WatchMovie() {
         </Col>
         {recomment.length === 0 && !isMoblie && (
           <Col span={8}>
-            <div className="  mb:w-full mb:mt-[20px] mb:pl-0  ">
+            <div className=" mb:w-full mb:mt-[20px] mb:pl-0  ">
               <h3 className="text-slate-500 w-[280px] h-[30px]  bg-slate-500 mb-[20px] mb:mb-0 mb:text-center text-[26px] font-[500]">
                 Recommendations
               </h3>
