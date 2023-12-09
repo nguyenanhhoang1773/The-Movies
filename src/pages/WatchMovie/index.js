@@ -140,7 +140,7 @@ function WatchMovie() {
                   title="Movie"
                   allowFullScreen
                   className="relative mb:w-[300px] mb:h-auto w-full mb:min-w-0 min-w-[400px] h-[500px]  z-10"
-                  src={`https://www.2embed.to/embed/tmdb/movie?id=${idMovie}`}
+                  src={`https://www.2embed.cc/embed/${idMovie}`}
                 ></iframe>
                 <div className="absolute mb:w-[300px] flex justify-center items-center top-0 bottom-0 left-0 right-0 z-0 bg-zinc-900">
                   <Loading className="w-[40px] h-[40px]" />
